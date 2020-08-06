@@ -1,0 +1,11 @@
+".\Objects\Main.obj",
+".\Objects\Key.obj",
+".\Objects\Uart.obj",
+".\Objects\Led.obj",
+".\Objects\DHT11.obj",
+".\Objects\DS1302.obj",
+".\Objects\Lcd.obj",
+".\Objects\Delay.obj",
+".\Objects\Server.obj" 
+TO ".\Objects\温湿度传感器V1" 
+PRINT(".\Listings\温湿度传感器V1.m51") RAMSIZE(256) 

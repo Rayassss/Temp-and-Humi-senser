@@ -1,0 +1,254 @@
+C51 COMPILER V9.59.0.0   2                                                                 08/04/2020 17:22:40 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE 2
+OBJECT MODULE PLACED IN 2.OBJ
+COMPILER INVOKED BY: D:\KEIL5_5.29\C51\BIN\C51.EXE 2.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\51_DHT11;..\YL-47测试程序) DEB
+                    -UG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          //****************************************************************//
+   2          //     DHT21使用范例 
+   3          //单片机 AT89S52 或 STC89C52RC 
+   4          //功能   串口发送温湿度数据 晶振 11.0592M 波特率 9600 
+   5          //硬件   P2.0口为通讯口连接DHT11,DHT11的电源和地连接单片机的电源和地，单片机串口加MAX232连接电脑 
+   6          //公司  雁凌电子    
+   7          //****************************************************************//
+   8          
+   9          #include <STC8.h>
+  10          #include <intrins.h>  \
+  11          
+  12          //
+  13          typedef unsigned char  U8;       /* defined for unsigned 8-bits integer variable    无符号8位整型变量  */
+  14          typedef signed   char  S8;       /* defined for signed 8-bits integer variable      有符号8位整型变量  */
+  15          typedef unsigned int   U16;      /* defined for unsigned 16-bits integer variable     无符号16位整型变量 */
+  16          typedef signed   int   S16;      /* defined for signed 16-bits integer variable     有符号16位整型变量 */
+  17          typedef unsigned long  U32;      /* defined for unsigned 32-bits integer variable     无符号32位整型变量 */
+  18          typedef signed   long  S32;      /* defined for signed 32-bits integer variable     有符号32位整型变量 */
+  19          typedef float          F32;      /* single precision floating point variable (32bits) 单精度浮点数（32位长
+             -度） */
+  20          typedef double         F64;      /* double precision floating point variable (64bits) 双精度浮点数（64位长
+             -度） */
+  21          //
+  22          #define uchar unsigned char
+  23          #define uint unsigned int
+  24          #define   Data_0_time    4
+  25          
+  26          //----------------------------------------------//
+  27          //----------------IO口定义区--------------------//
+  28          //----------------------------------------------//
+  29          sbit  P2_0  = P4^0 ;
+  30          
+  31          //----------------------------------------------//
+  32          //----------------定义区--------------------//
+  33          //----------------------------------------------//
+  34          U8  U8FLAG,k;
+  35          U8  U8count,U8temp;
+  36          U8  U8T_data_H,U8T_data_L,U8RH_data_H,U8RH_data_L,U8checkdata;
+  37          U8  U8T_data_H_temp,U8T_data_L_temp,U8RH_data_H_temp,U8RH_data_L_temp,U8checkdata_temp;
+  38          U8  U8comdata;
+  39          U8  outdata[5];  //定义发送的字节数  
+  40          U8 str[5];
+  41          U16 U16temp1,U16temp2;
+  42          void SendData(U8 *a)
+  43          {
+  44   1        U8 i;
+  45   1        outdata[0] = a[0]; 
+  46   1        outdata[1] = a[1];
+  47   1        outdata[2] = a[2];
+  48   1        outdata[3] = a[3];
+  49   1        outdata[4] = a[4];
+  50   1        ES = 0;
+  51   1        for(i=0; i<5; i++)
+  52   1        {
+C51 COMPILER V9.59.0.0   2                                                                 08/04/2020 17:22:40 PAGE 2   
+
+  53   2          SBUF = outdata[i];
+  54   2          while(!TI);
+  55   2          TI = 0;
+  56   2        }
+  57   1        ES = 1;
+  58   1      }
+  59          /////////////////////////////////////////////
+  60          void Delayms(unsigned int xms)
+  61          {
+  62   1        unsigned int i,j;
+  63   1        for(i = xms; i > 0; i--)
+  64   1          for(j = 110; j > 0; j--);
+  65   1      }
+  66          void Delay100us()   //@24.000MHz
+  67          {
+  68   1        unsigned char i, j;
+  69   1      
+  70   1        i = 4;
+  71   1        j = 27;
+  72   1        do
+  73   1        {
+  74   2          while (--j);
+  75   2        } while (--i);
+  76   1      }
+  77          void Delay2000ms()    //@24.000MHz
+  78          {
+  79   1        unsigned char i, j, k;
+  80   1      
+  81   1        i = 244;
+  82   1        j = 130;
+  83   1        k = 4;
+  84   1        do
+  85   1        {
+  86   2          do
+  87   2          {
+  88   3            while (--k);
+  89   3          } while (--j);
+  90   2        } while (--i);
+  91   1      }
+  92          void Delay10us()    //@24.000MHz
+  93          {
+  94   1        unsigned char i;
+  95   1      
+  96   1        i = 78;
+  97   1        while (--i);
+  98   1      }
+  99          void Delay18ms()    //@24.000MHz
+ 100          {
+ 101   1        unsigned char i, j, k;
+ 102   1      
+ 103   1        _nop_();
+ 104   1        _nop_();
+ 105   1        i = 3;
+ 106   1        j = 50;
+ 107   1        k = 4;
+ 108   1        do
+ 109   1        {
+ 110   2          do
+ 111   2          {
+ 112   3            while (--k);
+ 113   3          } while (--j);
+ 114   2        } while (--i);
+C51 COMPILER V9.59.0.0   2                                                                 08/04/2020 17:22:40 PAGE 3   
+
+ 115   1      }
+ 116          //////////////////////////////////////////////////////  
+ 117          void COM()
+ 118          { 
+ 119   1         U8 i;    
+ 120   1          for(i=0;i<8;i++)     
+ 121   1           {
+ 122   2            U8FLAG=2; 
+ 123   2            while((!P2_0)&&U8FLAG++);
+ 124   2            Delay10us();
+ 125   2            Delay10us();
+ 126   2            Delay10us();
+ 127   2            U8temp=0;
+ 128   2            if(P2_0)U8temp=1;
+ 129   2            U8FLAG=2;
+ 130   2            while((P2_0)&&U8FLAG++);    
+ 131   2            if(U8FLAG==1)break;      
+ 132   2            U8comdata<<=1;
+ 133   2            U8comdata|=U8temp;  
+ 134   2           }
+ 135   1      }
+ 136          void RH(void)
+ 137            {
+ 138   1           P2_0=0;
+ 139   1           Delay18ms();
+ 140   1           P2_0=1;
+ 141   1           Delay10us();
+ 142   1           Delay10us();
+ 143   1           Delay10us();
+ 144   1           Delay10us();
+ 145   1           P2_0=1;
+ 146   1           if(!P2_0)  
+ 147   1           {
+ 148   2              U8FLAG=2;
+ 149   2              while((!P2_0)&&U8FLAG++);
+ 150   2              U8FLAG=2;
+ 151   2              while((P2_0)&&U8FLAG++);   
+ 152   2               COM();
+ 153   2               U8RH_data_H_temp=U8comdata;
+ 154   2               COM();
+ 155   2               U8RH_data_L_temp=U8comdata;
+ 156   2               COM();
+ 157   2               U8T_data_H_temp=U8comdata;
+ 158   2               COM();
+ 159   2               U8T_data_L_temp=U8comdata;
+ 160   2               COM();
+ 161   2               U8checkdata_temp=U8comdata;
+ 162   2               P2_0=1;
+ 163   2               U8temp=(U8T_data_H_temp+U8T_data_L_temp+U8RH_data_H_temp+U8RH_data_L_temp);
+ 164   2               if(U8temp==U8checkdata_temp)
+ 165   2               {
+ 166   3                  U8RH_data_H=U8RH_data_H_temp;
+ 167   3                  U8RH_data_L=U8RH_data_L_temp;
+ 168   3                  U8T_data_H=U8T_data_H_temp;
+ 169   3                  U8T_data_L=U8T_data_L_temp;
+ 170   3                  U8checkdata=U8checkdata_temp;
+ 171   3               }
+ 172   2           }
+ 173   1      
+ 174   1        }
+ 175          void main()
+ 176          {
+C51 COMPILER V9.59.0.0   2                                                                 08/04/2020 17:22:40 PAGE 4   
+
+ 177   1        PCON &= 0x7F;   //波特率不倍速
+ 178   1        SCON = 0x50;    //8位数据,可变波特率
+ 179   1        AUXR |= 0x40;   //定时器1时钟为Fosc,即1T
+ 180   1        AUXR &= 0xFE;   //串口1选择定时器1为波特率发生器
+ 181   1        TMOD &= 0x0F;   //清除定时器1模式位
+ 182   1        TMOD |= 0x20;   //设定定时器1为8位自动重装方式
+ 183   1        TL1 = 0xB2;   //设定定时初值
+ 184   1        TH1 = 0xB2;   //设定定时器重装值
+ 185   1        ET1 = 0;  
+ 186   1        TR1 = 1;       
+ 187   1        while(1)
+ 188   1        {  
+ 189   2           Delay2000ms();
+ 190   2           RH();
+ 191   2           Delay100us();
+ 192   2           str[0]=U8RH_data_H;
+ 193   2           str[1]=U8RH_data_L;
+ 194   2           str[2]=U8T_data_H;
+ 195   2           str[3]=U8T_data_L;
+ 196   2           str[4]=U8checkdata;
+ 197   2           SendData(str) ;  
+ 198   2        }
+ 199   1      }
+ 200          
+ 201          void RSINTR() interrupt 4 
+ 202          {
+ 203   1        static unsigned char uart_ser = 0;
+ 204   1        if(TI==1)   
+ 205   1        {
+ 206   2          TI=0;
+ 207   2        }
+ 208   1        RI = 0;
+ 209   1        if(SBUF == 0x7f)
+ 210   1        {
+ 211   2          uart_ser++;
+ 212   2          if(uart_ser == 10)
+ 213   2          {
+ 214   3            uart_ser = 0;
+ 215   3            IAP_CONTR |= 0x60;
+ 216   3          }
+ 217   2        }
+ 218   1        else
+ 219   1        {
+ 220   2          uart_ser = 0;
+ 221   2        }   
+ 222   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    433    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     30    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

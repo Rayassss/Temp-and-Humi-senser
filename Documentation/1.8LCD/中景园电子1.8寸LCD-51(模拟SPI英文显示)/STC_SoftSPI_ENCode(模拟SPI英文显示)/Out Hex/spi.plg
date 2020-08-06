@@ -1,0 +1,21 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+F:\显示屏技术资料\LCD技术资料\1.8LCD\STC_SoftSPI_ENCode(模拟SPI英文显示)\STC_SoftSPI_ENCode(模拟SPI英文显示)\Mode.uvproj
+Project File Date:  10/19/2015
+
+<h2>Output:</h2>
+Rebuild target 'Target 1'
+compiling 282838p.c...
+linking...
+Program Size: data=71.0 xdata=0 code=5616
+creating hex file from ".\Out Hex\SPI"...
+".\Out Hex\SPI" - 0 Error(s), 0 Warning(s).
+Rebuild target 'Target 1'
+compiling 282838p.c...
+linking...
+Program Size: data=71.0 xdata=0 code=5617
+creating hex file from ".\Out Hex\SPI"...
+".\Out Hex\SPI" - 0 Error(s), 0 Warning(s).

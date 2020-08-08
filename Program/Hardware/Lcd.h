@@ -28,6 +28,7 @@ void dsp_single_colour(int color);
 void Display_ASCII8X16(unsigned int x0,unsigned int y0,unsigned char *s);
 void LCD_Clear(unsigned int Color);
 void Display_Desc();
+void go_Lcd();
 
 
 #endif

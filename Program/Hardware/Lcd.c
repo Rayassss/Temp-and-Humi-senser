@@ -4,7 +4,7 @@
 #include "intrins.h"
 #include "string.h"
 #include "AsciiLib.h"
-
+#include "Delay.h"
 
 
 //uchar code Zk_ASCII8X16[];
@@ -313,6 +313,23 @@ void Display_Desc()
     Display_ASCII8X16(10,74,"VA:6 o'clock");
     Display_ASCII8X16(10,90,"2015.10.26");
 }
-
+void go_Lcd()
+{
+		lcd_initial();
+		bl=1;
+		while(1)
+		{
+			dsp_single_colour(RED);//红色
+			dsp_single_colour(GREEN);//绿色	
+			dsp_single_colour(BLUE);//蓝色
+			Delayms(500);
+			dsp_single_colour(WHITE);//白色
+			Display_Desc();         //版本
+			Delayms(500);
+    }
+		
+		LCD_Clear(WHITE);
+		Display_Desc();
+}
 
 

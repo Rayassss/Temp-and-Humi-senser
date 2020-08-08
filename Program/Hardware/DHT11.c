@@ -3,6 +3,7 @@
 #include "DHT11.h"
 sbit DATA = P4^0;
 unsigned char Byte_temp;
+unsigned char str[5];
 unsigned char RH_data_H,RH_data_L,T_data_H,T_data_L,checkdata;
 
 void Readbyte()
@@ -76,7 +77,21 @@ void SendData(unsigned char *a)
 	}
 	ES = 1;	
 }
-
+void go_DHT11()
+{
+	while(1)
+	{
+		Delay2000ms();
+		DHT11_init();
+		Delay100us();
+	  str[0]=RH_data_H;
+	  str[1]=RH_data_L;
+	  str[2]=T_data_H;
+	  str[3]=T_data_L;
+	  str[4]=checkdata;
+	  SendData(str) ;  		
+	}
+}
 
 
 

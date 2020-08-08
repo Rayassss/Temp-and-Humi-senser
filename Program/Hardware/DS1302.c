@@ -87,5 +87,23 @@ void DS_ReadTime()
 	{
 		TIME[n] = DS_ReadByte(READ_RTC_ADDR[n]);
 	}
-		
+}
+void go_DS1302()
+{
+	unsigned char i;
+	DS_Init();
+	while(1)
+	{
+		Delay2000ms();
+		DS_ReadTime();
+		ES = 0;
+		for(i=0; i<7; i++)
+		{
+			SBUF = TIME[i];
+			while(!TI);
+			TI = 0;
+		}
+		ES = 1;
+		Delay2000ms();
+	}
 }

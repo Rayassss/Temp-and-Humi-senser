@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   LCD                                                               08/06/2020 15:46:37 PAGE 1   
+C51 COMPILER V9.59.0.0   LCD                                                               08/08/2020 11:20:05 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE LCD
@@ -14,7 +14,7 @@ line level    source
    4          #include "intrins.h"
    5          #include "string.h"
    6          #include "AsciiLib.h"
-   7          
+   7          #include "Delay.h"
    8          
    9          
   10          //uchar code Zk_ASCII8X16[];
@@ -62,7 +62,7 @@ line level    source
   52   1        unsigned char i=0;
   53   1        cs=0;
   54   1        rs=1;
-C51 COMPILER V9.59.0.0   LCD                                                               08/06/2020 15:46:37 PAGE 2   
+C51 COMPILER V9.59.0.0   LCD                                                               08/08/2020 11:20:05 PAGE 2   
 
   55   1        SPI_WriteData(Data>>8);   //写入高8位数据
   56   1        SPI_WriteData(Data);      //写入低8位数据
@@ -126,7 +126,7 @@ line level    source
  114   1        Lcd_WriteData(0x2A); 
  115   1        Lcd_WriteIndex(0xC4); 
  116   1        Lcd_WriteData(0x8A); 
-C51 COMPILER V9.59.0.0   LCD                                                               08/06/2020 15:46:37 PAGE 3   
+C51 COMPILER V9.59.0.0   LCD                                                               08/08/2020 11:20:05 PAGE 3   
 
  117   1        Lcd_WriteData(0xEE); 
  118   1        
@@ -190,7 +190,7 @@ line level    source
  176   1        Lcd_WriteIndex(0xF6); //Disable ram power save mode 
  177   1        Lcd_WriteData(0x00); 
  178   1        
-C51 COMPILER V9.59.0.0   LCD                                                               08/06/2020 15:46:37 PAGE 4   
+C51 COMPILER V9.59.0.0   LCD                                                               08/08/2020 11:20:05 PAGE 4   
 
  179   1        Lcd_WriteIndex(0x3A); //65k mode 
  180   1        Lcd_WriteData(0x05); 
@@ -254,7 +254,7 @@ line level    source
  237          
  238          void dsp_single_colour(int color)
  239          {
-C51 COMPILER V9.59.0.0   LCD                                                               08/06/2020 15:46:37 PAGE 5   
+C51 COMPILER V9.59.0.0   LCD                                                               08/08/2020 11:20:05 PAGE 5   
 
  240   1        unsigned char i,j;
  241   1        Lcd_SetRegion(0,0,128-1,160-1,1);
@@ -318,7 +318,7 @@ line level    source
  299   1        for (i=0;i<160;i++)
  300   1        {
  301   2            for (j=0;j<128;j++)
-C51 COMPILER V9.59.0.0   LCD                                                               08/06/2020 15:46:37 PAGE 6   
+C51 COMPILER V9.59.0.0   LCD                                                               08/08/2020 11:20:05 PAGE 6   
 
  302   2          {
  303   3                Lcd_WriteData_16(Color);
@@ -334,13 +334,31 @@ line level    source
  313   1          Display_ASCII8X16(10,74,"VA:6 o'clock");
  314   1          Display_ASCII8X16(10,90,"2015.10.26");
  315   1      }
- 316          
- 317          
- 318          
+ 316          void go_Lcd()
+ 317          {
+ 318   1          lcd_initial();
+ 319   1          bl=1;
+ 320   1          while(1)
+ 321   1          {
+ 322   2            dsp_single_colour(RED);//红色
+ 323   2            dsp_single_colour(GREEN);//绿色 
+ 324   2            dsp_single_colour(BLUE);//蓝色
+ 325   2            Delayms(500);
+ 326   2            dsp_single_colour(WHITE);//白色
+ 327   2            Display_Desc();         //版本
+ 328   2            Delayms(500);
+ 329   2          }
+ 330   1          
+ 331   1          LCD_Clear(WHITE);
+ 332   1          Display_Desc();
+ 333   1      }
+ 334          
+ 335          
+*** WARNING C294 IN LINE 331 OF Hardware\Lcd.c: unreachable code
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1163    ----
+   CODE SIZE        =   1215    ----
    CONSTANT SIZE    =   4161    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
@@ -350,4 +368,4 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

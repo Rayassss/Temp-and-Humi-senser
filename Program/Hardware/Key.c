@@ -36,9 +36,12 @@ void KeyRST()
 		Delayms(10);
 		if(!RST)
 		{
-			IAP_CONTR |= 0x10;
+			IAP_CONTR |= 0x20;
 			Ledinit();
-			while(!RST);
+		}
+		else
+		{
+			Led = 1;
 		}
 	}
 }

@@ -9,3 +9,5 @@
 ".\Objects\Server.obj" 
 TO ".\Objects\温湿度传感器V1" 
 PRINT(".\Listings\温湿度传感器V1.m51") RAMSIZE(256) 
+CODE( 0X0000-0XFFF8 )
+XDATA( 0X0000-0X07FF )

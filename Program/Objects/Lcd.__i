@@ -1,1 +1,1 @@
-"Hardware\Lcd.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(.\User;.\System;.\Hardware;.\System;.\User) DEBUG OBJECTEXTEND PRINT(.\Listings\Lcd.lst) TABS (2) OBJECT(.\Objects\Lcd.obj)
+"Hardware\Lcd.c" LARGE ROM(COMPACT) OPTIMIZE (8,SPEED) BROWSE INCDIR(.\User;.\System;.\Hardware;.\System;.\User) DEBUG OBJECTEXTEND PRINT(.\Listings\Lcd.lst) TABS (2) OBJECT(.\Objects\Lcd.obj)

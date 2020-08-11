@@ -4,13 +4,27 @@
 #include "Uart.h"
 #include "DS1302.h"
 #include "Lcd.h"
+#include "GUI.h"
+#include "Key.h"
 void main()
 {
-		Uart1_Init();
+	KeyRST();
+	Uart1_Init();
+	bl = 0;
+	Delay2000ms()	;
+	bl = 1;
+	lcd_initial();
+	dsp_single_colour(GREEN);
+	Display_ASCII8X16(10,14,"666");
+	while(1)
+	{
+		KeyRST();
+	}
 }
 
 void UART1_Isr() interrupt 4
 {
+	//---免掉点下载，波特率默认57600bps--------
 	static unsigned char uart_ser = 0;
 	if(TI==1)   
 	{
@@ -30,4 +44,5 @@ void UART1_Isr() interrupt 4
 	{
 		uart_ser = 0;
 	}   
+	//-----------------------------------------
 }

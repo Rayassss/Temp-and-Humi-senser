@@ -1,43 +1,46 @@
-C51 COMPILER V9.59.0.0   UART                                                              08/08/2020 11:16:32 PAGE 1   
+C51 COMPILER V9.59.0.0   UART                                                              08/11/2020 16:35:20 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE UART
 OBJECT MODULE PLACED IN .\Objects\Uart.obj
-COMPILER INVOKED BY: D:\KEIL5_5.29\C51\BIN\C51.EXE Hardware\Uart.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\User;.\System;.\Har
-                    -dware;.\System;.\User) DEBUG OBJECTEXTEND PRINT(.\Listings\Uart.lst) TABS(2) OBJECT(.\Objects\Uart.obj)
+COMPILER INVOKED BY: D:\KEIL5_5.29\C51\BIN\C51.EXE Hardware\Uart.c LARGE ROM(COMPACT) OPTIMIZE(8,SPEED) BROWSE INCDIR(.\
+                    -User;.\System;.\Hardware;.\System;.\User) DEBUG OBJECTEXTEND PRINT(.\Listings\Uart.lst) TABS(2) OBJECT(.\Objects\Uart.ob
+                    -j)
 
 line level    source
 
    1          #include "STC8F.h"
    2          #include "Uart.h"
-   3          void Uart1_Init()//9600bps@24.000MHz
+   3          void Uart1_Init()//57600bps@24.000MHz
    4          {
-   5   1        SCON = 0x50;  
-   6   1        AUXR |= 0x40;   
-   7   1        AUXR &= 0xFE;   
-   8   1        TMOD &= 0x0F;   
-   9   1        TL1 = 0x8F; 
-  10   1        TH1 = 0xFD;   
-  11   1        ET1 = 0;    
-  12   1        TR1 = 1;    
-  13   1        EA = 1;
-  14   1        ES = 1;
-  15   1      
-  16   1      }
-  17          void Send_string(unsigned char *a)
-  18          {
-  19   1        while(*a != '!')
-  20   1        {
-  21   2          SBUF = *a;
-  22   2          a++;
-  23   2          while(TI != 1);
-  24   2          TI = 0;
-  25   2        }
-  26   1      }
+   5   1        PCON |= 0x80;   //使能波特率倍速位SMOD
+   6   1        SCON = 0x50;    //8位数据,可变波特率
+   7   1        AUXR |= 0x40;   //定时器1时钟为Fosc,即1T
+   8   1        AUXR &= 0xFE;   //串口1选择定时器1为波特率发生器
+   9   1        TMOD &= 0x0F;   //清除定时器1模式位
+  10   1        TMOD |= 0x20;   //设定定时器1为8位自动重装方式
+  11   1        TL1 = 0xE6;   //设定定时初值
+  12   1        TH1 = 0xE6;   //设定定时器重装值
+  13   1        ET1 = 0;    //禁止定时器1中断
+  14   1        TR1 = 1;    //启动定时器1
+  15   1        EA = 1;
+  16   1        ES = 1;
+  17   1      
+  18   1      }
+  19          void Send_string(unsigned char *a)
+  20          {
+  21   1        while(*a != '!')
+  22   1        {
+  23   2          SBUF = *a;
+  24   2          a++;
+  25   2          while(TI != 1);
+  26   2          TI = 0;
+  27   2        }
+  28   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =     52    ----
+   CODE SIZE        =     58    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----

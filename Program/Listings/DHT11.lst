@@ -1,10 +1,11 @@
-C51 COMPILER V9.59.0.0   DHT11                                                             08/08/2020 11:16:29 PAGE 1   
+C51 COMPILER V9.59.0.0   DHT11                                                             08/11/2020 16:35:20 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE DHT11
 OBJECT MODULE PLACED IN .\Objects\DHT11.obj
-COMPILER INVOKED BY: D:\KEIL5_5.29\C51\BIN\C51.EXE Hardware\DHT11.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\User;.\System;.\Ha
-                    -rdware;.\System;.\User) DEBUG OBJECTEXTEND PRINT(.\Listings\DHT11.lst) TABS(2) OBJECT(.\Objects\DHT11.obj)
+COMPILER INVOKED BY: D:\KEIL5_5.29\C51\BIN\C51.EXE Hardware\DHT11.c LARGE ROM(COMPACT) OPTIMIZE(8,SPEED) BROWSE INCDIR(.
+                    -\User;.\System;.\Hardware;.\System;.\User) DEBUG OBJECTEXTEND PRINT(.\Listings\DHT11.lst) TABS(2) OBJECT(.\Objects\DHT11
+                    -.obj)
 
 line level    source
 
@@ -61,9 +62,9 @@ line level    source
   51   2          DATA = 1;
   52   2          if((T_data_H_temp+T_data_L_temp+RH_data_H_temp+RH_data_L_temp) == checkdata_temp)
   53   2          {
-  54   3            RH_data_H = RH_data_H_temp;
-C51 COMPILER V9.59.0.0   DHT11                                                             08/08/2020 11:16:29 PAGE 2   
+C51 COMPILER V9.59.0.0   DHT11                                                             08/11/2020 16:35:20 PAGE 2   
 
+  54   3            RH_data_H = RH_data_H_temp;
   55   3            RH_data_L = RH_data_L_temp;
   56   3            T_data_H  = T_data_H_temp;
   57   3            T_data_L  = T_data_L_temp;
@@ -118,16 +119,16 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    294    ----
+   CODE SIZE        =    413    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =   ----    ----
+   XDATA SIZE       =     11      12
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =     11      12
+   DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
-END OF MODULE INFORMATION.
+C51 COMPILER V9.59.0.0   DHT11                                                             08/11/2020 16:35:20 PAGE 3   
 
-C51 COMPILER V9.59.0.0   DHT11                                                             08/08/2020 11:16:29 PAGE 3   
+END OF MODULE INFORMATION.
 
 
 C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

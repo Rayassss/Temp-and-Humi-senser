@@ -5,9 +5,12 @@
 #include "string.h"
 #include "AsciiLib.h"
 #include "Delay.h"
-
-
-//uchar code Zk_ASCII8X16[];
+//sbit bl        =P4^4;//接模块BL引脚，背光可以采用IO控制或者PWM控制，也可以直接接到高电平常亮
+sbit scl       =P1^1;//接模块CLK引脚,接裸屏Pin9_SCL
+sbit sda       =P1^2;//接模块DIN/MOSI引脚，接裸屏Pin8_SDA
+sbit rs        =P1^3;//接模块D/C引脚，接裸屏Pin7_A0
+sbit cs        =P1^0;//接模块CE引脚，接裸屏Pin12_CS
+sbit reset     =P1^4;//接模块RST引脚，接裸屏Pin6_RES
 void delay(unsigned int time)
 {
  unsigned int i,j;
@@ -193,7 +196,7 @@ void lcd_initial()
 //全屏填充函数
 void Lcd_SetRegion(unsigned int x_start,unsigned int y_start,unsigned int x_end,unsigned int y_end,unsigned char mode)//mode是横竖屏模式，1为横屏，2为竖屏
 {	
-	if(mode == 1)
+	if(mode == 2)
 	{
 	Lcd_WriteIndex(0x2a);
 	Lcd_WriteData(0x02);
@@ -207,7 +210,7 @@ void Lcd_SetRegion(unsigned int x_start,unsigned int y_start,unsigned int x_end,
 	Lcd_WriteData(0x01);
 	Lcd_WriteData(y_end+1);
 	}
-	else if(mode==2)
+	else if(mode == 1)
 	{
 	Lcd_WriteIndex(0x2a);
 	Lcd_WriteData(0x02);
@@ -228,17 +231,13 @@ void Lcd_SetRegion(unsigned int x_start,unsigned int y_start,unsigned int x_end,
 
 void PutPixel(unsigned int x_start,unsigned int y_start,unsigned int color)
 {
-	Lcd_SetRegion(x_start,y_start,x_start+1,y_start+1,1);
+	Lcd_SetRegion(x_start,y_start,x_start+1,y_start+1,2);
 	Lcd_WriteData_16(color);
-	
 }
-
-
-
 void dsp_single_colour(int color)
 {
  	unsigned char i,j;
-	Lcd_SetRegion(0,0,128-1,160-1,1);
+	Lcd_SetRegion(0,0,128-1,160-1,2);
  	for (i=0;i<160;i++)
     	for (j=0;j<128;j++)
         	Lcd_WriteData_16(color);
@@ -247,55 +246,43 @@ void dsp_single_colour(int color)
 void Display_ASCII8X16(unsigned int x0,unsigned int y0,unsigned char *s)
 {
 	int i,j,k,x,y,xx;
-	
 	unsigned char qm;
-	
 	long int ulOffset;
-	
 	char  ywbuf[32],temp[2];
-
 	for(i = 0; i<strlen((char*)s);i++)
 	{
 		if(((unsigned char)(*(s+i))) >= 161)
 		{
 			temp[0] = *(s+i);
 			temp[1] = '\0';
-			return;
-		}
-		
+		}	
 		else
 		{
 			qm = *(s+i);
-
-			ulOffset = (long int)(qm) * 16;
-			
+			ulOffset = (long int)(qm) * 16;		
       for (j = 0; j < 16; j ++)
       {
 				ywbuf[j]=Zk_ASCII8X16[ulOffset+j];
-      }
-             
+      }          
       for(y = 0;y < 16;y++)
       {
 	        for(x=0;x<8;x++) 
 	        {
-             k=x % 8;
-                	
+             k=x % 8;            	
 				  	if(ywbuf[y]&(0x80 >> k))
 				   	{
 				  		xx=x0+x+i*8;
 				    	PutPixel(xx,y+y0,RED);
-				  	}
-							
+				  	}						
 			   	}
       }
-
 		}
 	}     	
 }
 void LCD_Clear(unsigned int Color)
 {
 	unsigned char i,j;
-	Lcd_SetRegion(0,0,127,159,1);
+	Lcd_SetRegion(0,0,127,159,2);
 	for (i=0;i<160;i++)
 	{
     	for (j=0;j<128;j++)
@@ -306,30 +293,14 @@ void LCD_Clear(unsigned int Color)
 }
 void Display_Desc()
 { 
-    Display_ASCII8X16(10,10,"Welcome");
-    Display_ASCII8X16(10,26,"Zhongjy");
-    Display_ASCII8X16(10,42,"Dots:128*160");
-    Display_ASCII8X16(10,58,"IC: ST7735");
-    Display_ASCII8X16(10,74,"VA:6 o'clock");
-    Display_ASCII8X16(10,90,"2015.10.26");
+    Display_ASCII8X16(10,10,"Dreamix is so so beautiful");
 }
 void go_Lcd()
 {
 		lcd_initial();
 		bl=1;
-		while(1)
-		{
-			dsp_single_colour(RED);//红色
-			dsp_single_colour(GREEN);//绿色	
-			dsp_single_colour(BLUE);//蓝色
-			Delayms(500);
-			dsp_single_colour(WHITE);//白色
-			Display_Desc();         //版本
-			Delayms(500);
-    }
-		
-		LCD_Clear(WHITE);
-		Display_Desc();
+		dsp_single_colour(WHITE);//白色
+		Display_Desc();         //版本
 }
 
 

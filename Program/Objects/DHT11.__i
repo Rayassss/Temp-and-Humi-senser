@@ -1,0 +1,1 @@
+"Hardware\DHT11.c" LARGE ROM(COMPACT) OPTIMIZE (8,SPEED) BROWSE INCDIR(.\User;.\System;.\Hardware;.\System;.\User) DEBUG OBJECTEXTEND PRINT(.\Listings\DHT11.lst) TABS (2) OBJECT(.\Objects\DHT11.obj)

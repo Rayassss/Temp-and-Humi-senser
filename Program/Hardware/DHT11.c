@@ -1,6 +1,8 @@
 #include "STC8F.h"
 #include "Delay.h"
 #include "DHT11.h"
+#include "Lcd.h"
+#include "Math.h"
 sbit DATA = P4^0;
 unsigned char Byte_temp;
 unsigned char str[5];
@@ -77,10 +79,26 @@ void SendData(unsigned char *a)
 	}
 	ES = 1;	
 }
+//void Transvalue()
+//{
+//	unsigned char byte,sum,i,t;
+//	unsigned char *j;
+//	byte = str[0];
+//	for(i=0; i<8; i++)
+//	{
+//		t = byte & 0x80;
+//		byte <<= 1;
+//		sum = 2*sum + t;
+//	}
+//	*j = sum;
+////	sum = 0;
+//	t = 0;
+//	SBUF = 1;
+//	while(!TI);
+//	TI = 0;
+//}
 void go_DHT11()
 {
-	while(1)
-	{
 		Delay2000ms();
 		DHT11_init();
 		Delay100us();
@@ -89,8 +107,8 @@ void go_DHT11()
 	  str[2]=T_data_H;
 	  str[3]=T_data_L;
 	  str[4]=checkdata;
-	  SendData(str) ;  		
-	}
+	  SendData(str) ;  	
+//		Display_ASCII8X16(10,10,RH_data_H);
 }
 
 

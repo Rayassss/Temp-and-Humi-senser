@@ -8,17 +8,17 @@
 #include "Key.h"
 void main()
 {
-	KeyRST();
 	Uart1_Init();
+	
+//	Transvalue();
 	bl = 0;
 	Delay2000ms()	;
 	bl = 1;
 	lcd_initial();
-	dsp_single_colour(GREEN);
-	Display_ASCII8X16(10,14,"666");
+	dsp_single_colour(WHITE);
 	while(1)
 	{
-		KeyRST();
+		go_DHT11();
 	}
 }
 

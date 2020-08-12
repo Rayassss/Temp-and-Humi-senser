@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   DS1302                                                            08/11/2020 16:35:20 PAGE 1   
+C51 COMPILER V9.59.0.0   DS1302                                                            08/12/2020 16:44:25 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE DS1302
@@ -62,7 +62,7 @@ line level    source
   51   1        {
   52   2          IO = (addr & 0x01);
   53   2          addr >>= 1;
-C51 COMPILER V9.59.0.0   DS1302                                                            08/11/2020 16:35:20 PAGE 2   
+C51 COMPILER V9.59.0.0   DS1302                                                            08/12/2020 16:44:25 PAGE 2   
 
   54   2          SCLK = 1;
   55   2          _nop_();
@@ -87,7 +87,7 @@ line level    source
   74          {
   75   1        unsigned char n;
   76   1        DS_WriteByte(0x8E,0X00);     //禁止写保护，就是关闭写保护功能
-  77   1        for (n=0; n<7; n++)//写入7个字节的时钟信号：分秒时日月周年
+  77   1        for (n=0; n<7; n++)//写入7个字节的时钟信号：秒 分 时 日 月 周 年
   78   1        {
   79   2          DS_WriteByte(WRITE_RTC_ADDR[n],TIME[n]);  
   80   2        }
@@ -103,31 +103,18 @@ line level    source
   90   1      }
   91          void go_DS1302()
   92          {
-  93   1        unsigned char i;
-  94   1        DS_Init();
-  95   1        while(1)
-  96   1        {
-  97   2          Delay2000ms();
-  98   2          DS_ReadTime();
-  99   2          ES = 0;
- 100   2          for(i=0; i<7; i++)
- 101   2          {
- 102   3            SBUF = TIME[i];
- 103   3            while(!TI);
- 104   3            TI = 0;
- 105   3          }
- 106   2          ES = 1;
- 107   2          Delay2000ms();
- 108   2        }
- 109   1      }
+  93   1        DS_Init();
+  94   1        while(1)
+  95   1        {
+  96   2          DS_ReadTime();
+  97   2        }
+  98   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    304    ----
+   CODE SIZE        =    261    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =     21    ----
-C51 COMPILER V9.59.0.0   DS1302                                                            08/11/2020 16:35:20 PAGE 3   
-
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----

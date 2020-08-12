@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   GUI                                                               08/11/2020 16:24:49 PAGE 1   
+C51 COMPILER V9.59.0.0   GUI                                                               08/12/2020 16:46:06 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE GUI
@@ -11,279 +11,45 @@ line level    source
    1          #include "Lcd.h"
    2          #include "Font.h"
    3          #include "GUI.h"
-   4          void General_Display_Font(unsigned char x, unsigned int  y, unsigned int dcolor,unsigned int bgcolor,
-   5            unsigned char *str,unsigned char Num,unsigned char Length,unsigned char Height)
-   6          {
-   7   1        unsigned char *Temp_Str;
-   8   1        unsigned char i,j,k,m;                  //∂®“Â¡Ÿ ±±‰¡ø
-   9   1        Num++;
-  10   1        Temp_Str = str;
-  11   1        for (k=0;k<Num;k++)                       //64±Ì æ◊‘Ω®◊÷ø‚÷–µƒ∏ˆ ˝£¨—≠ª∑≤È—Øƒ⁄¬Î  ’‚∏ˆ ˝≤¢≤ª»∑∂® »°æˆ”⁄¥Ê»Áµƒ∫∫◊÷∏ˆ 
-             -˝    
-  12   1        {
-  13   2          Address_set((k*Length) + x,y,(k*Length) + x + Length - 1, y + Height - 1);   // …Ë÷√Œ™◊›œÚœ‘ æ
-*** WARNING C206 IN LINE 13 OF App\GUI.c: 'Address_set': missing function-prototype
-*** ERROR C267 IN LINE 13 OF App\GUI.c: 'Address_set': requires ANSI-style prototype
-  14   2          for(i=0;i<((Length * Height) / 8);i++)
-  15   2          {                   //32∏ˆ◊÷Ω⁄ √ø∏ˆ◊÷Ω⁄∂º“™“ª∏ˆµ„“ª∏ˆµ„¥¶¿Ì À˘“‘ «¥¶¿Ì¡À32X8¥Œ
-  16   3            str = Temp_Str;
-  17   3            str += k * ((Length * Height) / 8) + i;
-  18   3            m = *str;
-  19   3            for(j=0;j<8;j++)                  //œ‘ æ“ª∏ˆ◊÷Ω⁄  “ª∏ˆ◊÷Ω⁄8Œª “≤æÕ «8∏ˆµ„
-  20   3            {
-  21   4                if((m&0x80)==0x80)              //≈–∂œ «∑Ò «“™–¥»Îµ„   »Áπ˚ « ∏¯◊÷ÃÂ—’…´
-  22   4                  Lcd_Write_Data(dcolor);       
-  23   4                else                      //»Áπ˚≤ª « Œ™±≥æ∞…´  ∏¯—’…´
-  24   4                  Lcd_Write_Data(bgcolor);
-  25   4                m <<= 1;                        //◊Û“∆“ªŒª  ≈–∂œœ¬“ªµ„
-  26   4            }
-  27   3          }
-  28   2        }
-  29   1      }
-  30          //«Â∆¡
-  31          //color «±≥æ∞—’…´°£
-  32          //Àµ√˜£∫ π”√±≥æ∞—’…´«Â≥˝TFTƒ£øÈ∆¡ƒªµƒ»´≤øœ‘ æƒ⁄»›°£
-  33          void GUI_Clear(unsigned int color)
-  34          {
-  35   1         unsigned int i;
-  36   1         unsigned int j;
-  37   1         Address_set(0,0,159,127);
-  38   1         for(i=0;i<128;i++)
-  39   1         {
-  40   2            for (j=0;j<160;j++)
-  41   2            {
-  42   3                 Lcd_Write_Data(color);
-  43   3            }
-  44   2          }
-  45   1      }
-  46          //ª≠µ„
-  47          //(x£¨y) «µ„µƒ◊¯±Í
-  48          //color  «µ„µƒ—’…´°£
-  49          //Àµ√˜£∫”√÷∏∂®µƒ—’…´‘⁄÷∏∂®µƒ◊¯±ÍŒª÷√…œª≠≥ˆ“ª∏ˆµ„°£
-  50          void Draw_Frame()
-  51          {
-C51 COMPILER V9.59.0.0   GUI                                                               08/11/2020 16:24:49 PAGE 2   
+   4          #include "Delay.h"
+   5          #include "DHT11.h"
+   6          unsigned char code Table[] = "0123456789";
+   7          extern unsigned char RH_data_H,RH_data_L,T_data_H,T_data_L,checkdata;
+   8          void Draw_DHT11()
+   9          {
+  10   1        unsigned char RH[2],T[2];
+  11   1          Delay2000ms();
+  12   1          DHT11_init();
+  13   1          Delay100us();
+  14   1      //    str[0]=RH_data_H;
+  15   1      //    str[1]=RH_data_L;
+  16   1      //    str[2]=T_data_H;
+  17   1      //    str[3]=T_data_L;
+  18   1      //    str[4]=checkdata;
+  19   1      //    SendData(str) ;  
+  20   1          dsp_single_colour(WHITE);
+  21   1          RH[0] = Table[RH_data_H/10];
+  22   1          RH[1] = Table[RH_data_H%10];
+  23   1          Display_ASCII8X16(10,10,RH);
+  24   1          T[0] = Table[T_data_H/10];
+  25   1          T[1] = Table[T_data_H%10];
+  26   1          Display_ASCII8X16(10,20,T);
+  27   1      }
+  28          void Draw_DS1302()
+  29          {
+  30   1        
+  31   1      }
 
-  52   1        GUI_box(0,0,159,2,Black);
-  53   1        GUI_box(0,0,2,127,Black);
-  54   1        GUI_box(0,125,159,127,Black);
-  55   1        GUI_box(157,0,159,127,Black);//œ‘ æ±ﬂøÚ
-  56   1      } 
-  57          void GUI_Point(unsigned char x, unsigned int y, unsigned int color)
-  58          {  
-  59   1        Address_set(x,y,x,y);
-  60   1        Lcd_Write_Data(color);
-  61   1      }
-  62          //ª≠8µ„(BresenhamÀ„∑®)      
-  63          //(rx,ry,a,b):≤Œ ˝
-  64          //color:—’…´
-  65          void gui_circle8(unsigned int rx,unsigned int ry,int a,int b,unsigned int color)
-  66          {
-  67   1        GUI_Point(rx+a,ry-b,color);              
-  68   1        GUI_Point(rx+b,ry-a,color);                       
-  69   1        GUI_Point(rx+b,ry+a,color);                           
-  70   1        GUI_Point(rx+a,ry+b,color);             
-  71   1        GUI_Point(rx-a,ry+b,color);                  
-  72   1        GUI_Point(rx-b,ry+a,color);               
-  73   1        GUI_Point(rx-b,ry-a,color);                      
-  74   1        GUI_Point(rx-a,ry-b,color);                  
-  75   1      }
-  76          //‘⁄÷∏∂®Œª÷√ª≠“ª∏ˆ÷∏∂®¥Û–°µƒ‘≤
-  77          //(rx,ry):‘≤–ƒ
-  78          //r    :∞Îæ∂
-  79          //color:—’…´
-  80          //mode :0,≤ªÃÓ≥‰;1,ÃÓ≥‰
-  81          void GUI_arc(unsigned int rx,unsigned int ry,unsigned int r,unsigned int color,unsigned char mode)
-  82          {
-  83   1        int a,b,c;
-  84   1        int di;   
-  85   1        a=0;b=r;    
-  86   1        di=3-(r<<1);  //≈–∂œœ¬∏ˆµ„Œª÷√µƒ±Í÷æ
-  87   1        while(a<=b)
-  88   1        {
-  89   2          if(mode)
-  90   2          for(c=a;c<=b;c++)
-  91   2          gui_circle8(rx,ry,a,c,color);//ª≠ µ–ƒ‘≤
-  92   2          else gui_circle8(rx,ry,a,b,color);      //ª≠ø’–ƒ‘≤
-  93   2          a++;
-  94   2          // π”√BresenhamÀ„∑®ª≠‘≤     
-  95   2          if(di<0)di +=4*a+6;   
-  96   2          else
-  97   2          {
-  98   3            di+=10+4*(a-b);   
-  99   3            b--;
- 100   3          }                 
- 101   2        }
- 102   1      }
- 103          //”…”⁄RPGΩ‚Œˆ ±≥ˆ¡Àµ„–°Œ Ã‚£¨–Ë“™”√’‚∏ˆ∫Ø ˝Ω¯––—’…´µƒ◊™ªª
- 104          unsigned int TranColor(unsigned int color)
- 105          {
- 106   1        unsigned int Result;
- 107   1        unsigned int Temp_Red,Temp_Blue,Temp_Green;
- 108   1        Temp_Red = color >> 11;
- 109   1        Temp_Blue = color & 0x001f;
- 110   1        Temp_Green = (color & 0x07ff) >> 5;
- 111   1        Result = Temp_Red;
- 112   1        Result |= Temp_Green << 5;
- 113   1        Result |= Temp_Blue << 11;
-C51 COMPILER V9.59.0.0   GUI                                                               08/11/2020 16:24:49 PAGE 3   
 
- 114   1        return Result;
- 115   1      }
- 116          //ª≠ µ–ƒæÿ–Œ
- 117          //(sx,sy)◊Û…œΩ«∂•µ„◊¯±Í, 
- 118          //(ex,ey)”“œ¬Ω«∂•µ„◊¯±Í, color—’…´
- 119          //∑µªÿ: Œﬁ
- 120          //Àµ√˜£∫‘⁄÷∏∂®Œª÷√…œª≠≥ˆ µ–ƒæÿ–Œ°£
- 121          void GUI_box(unsigned char sx,unsigned int sy,unsigned char ex,unsigned int ey,unsigned int color)
- 122          { 
- 123   1        unsigned int temp,temp1,m,n;   
- 124   1        Address_set(sx,sy,ex,ey); 
- 125   1        n=ex-sx+1;
- 126   1        m=ey-sy+1;
- 127   1        for(temp=0;temp<n;temp++)
- 128   1        {   
- 129   2          for(temp1=0;temp1<m;temp1++)
- 130   2          { 
- 131   3            Lcd_Write_Data(color);
- 132   3          }
- 133   2        }
- 134   1      }
- 135          //œ‘ æ”¢ŒƒªÚ ˝◊÷◊÷∑˚
- 136          //∫Ø ˝÷ß≥÷ ◊÷∑˚µƒ◊›œÚ∫Õ∫·œÚœ‘ æ £®“™≈‰∫œ…®√Ë∑Ω Ω£©
- 137          //x  y  “™œ‘ æ◊÷∑˚µƒ≥ı º◊¯±Í
- 138          //value œ‘ æ◊÷∑˚ ˝æ›
- 139          //dcolor œ‘ æµƒ◊÷∑˚—’…´  bgcolorœ‘ æ◊÷∑˚µƒ±≥æ∞—’…´
- 140          //mode   0 ◊÷∑˚◊›œÚœ‘ æ  1 ◊÷∑˚∫·œÚœ‘ æ
- 141          void GUI_sprintf_char(unsigned char x,unsigned int y,unsigned char value,unsigned int dcolor,unsigned int 
-             -bgcolor,unsigned char mode) 
- 142          {  
- 143   1        unsigned char i,j;
- 144   1        unsigned char *temp=Asc_5_8_;    //temp «*tempµƒµÿ÷∑  ’‚¿ÔtempæÕ «zifuµƒ ◊µÿ÷∑       
- 145   1        temp+=(value-32)*8;   //»∑∂®“™œ‘ æµƒ÷µ
- 146   1                         //”√ascii±Ì  «∞32∏ˆascii√ª”–¥Ê»Îzifuø‚¿Ô À˘“‘“™ºı32
- 147   1                               //√ø∏ˆ◊÷∑˚”√16∏ˆ◊÷Ω⁄œ‘ æ À˘“‘‘⁄≥À“‘16  æÕ «∂‘”¶µƒœ‘ æŒªµƒ ◊µÿ÷∑
- 148   1          if(mode==0)Address_set(x,y,x+4,y+7);    //…Ë÷√«¯”Ú       
- 149   1          if(mode==1)Address_set(x,y,x+4,y+7); //…Ë÷√«¯”Ú           
- 150   1          for(j=0;j<8;j++)
- 151   1          {
- 152   2            for(i=0;i<5;i++)        //œ»∫·…®
- 153   2            {
- 154   3              if((*temp&(1<<(7-i)))!=0)      //Ω´1 ◊Û“∆ »ª∫Û∂‘”¶ŒªΩ¯––œ‡”Î        
- 155   3                Lcd_Write_Data(dcolor);      //œ‘ æ◊÷∑˚—’…´
- 156   3               
- 157   3              else        
- 158   3                Lcd_Write_Data(bgcolor);       //œ‘ æ±≥æ∞—’…´   
- 159   3            }
- 160   2            temp++;                  //œ¬“ª◊÷Ω⁄
- 161   2          }
- 162   1      }
- 163          //œ‘ æ∫∫◊÷◊÷∑˚¥Æ ◊›œÚœ‘ æ
- 164          //x1 y1 œ‘ æµƒ≥ı ºŒª÷√
- 165          //*str “™œ‘ æµƒ ˝æ›
- 166          //dcolor œ‘ æ◊÷∑˚µƒ—’…´
- 167          //bgcolor œ‘ æ◊÷∑˚µƒ±≥æ∞—’…´  
- 168          void GUI_sprintf_hzstr16x(unsigned char x1,unsigned int y1,unsigned char *str,unsigned int dcolor,unsigned
-             - int bgcolor)    
- 169          {  
- 170   1        unsigned char l=0;
- 171   1        while(*str)
- 172   1        {
- 173   2            GUI_box(x1+l*6-1,y1,x1+l*6-1,y1+7,bgcolor);
-C51 COMPILER V9.59.0.0   GUI                                                               08/11/2020 16:24:49 PAGE 4   
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    115    ----
+   CONSTANT SIZE    =   3811    ----
+   XDATA SIZE       =   ----       4
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
 
- 174   2            GUI_sprintf_char(x1+l*6,y1,*str,dcolor,bgcolor,0);
- 175   2            l+=1;
- 176   2            str++;
- 177   2        }
- 178   1      }
- 179          //œ‘ æ≤ªÕ¨µƒ◊÷∫≈£¨Font_Size—°‘Ò¡Ω÷÷◊÷∫≈£¨FONT_HUGE «¥Û∫≈24*62£¨FONT_MEDIUM «÷–∫≈16*32
- 180          //void Display_Num(unsigned char Font_Size,unsigned char x,unsigned int  y,unsigned char *str,unsigned int
-             - dcolor,unsigned int bgcolor)
- 181          //{
- 182          //  unsigned char Temp_Count = 0;
- 183          //  while(*str)
- 184          //  {
- 185          //    unsigned int i,Num;
- 186          //    unsigned char j,m;                  //∂®“Â¡Ÿ ±±‰¡ø
- 187          //    Num = *str;
- 188          //    if(Num == '.')
- 189          //      Num = 10;
- 190          //    else
- 191          //      Num = Num - 48;  //ASCII◊™ ˝◊÷
- 192          ////    if(Font_Size == FONT_HUGE)
- 193          ////    {
- 194          ////      Address_set(x+Temp_Count*23,y,x + Temp_Count*23 + 23, y + 62 - 1);
- 195          ////      for(i=0;i<186;i++)
- 196          ////      {                   //32∏ˆ◊÷Ω⁄ √ø∏ˆ◊÷Ω⁄∂º“™“ª∏ˆµ„“ª∏ˆµ„¥¶¿Ì À˘“‘ «¥¶¿Ì¡À32X8¥Œ
- 197          ////        m = Hugenumber_24_62_[Num * 186 + i];             //∂¡»°∂‘”¶◊÷Ω⁄ ˝æ›
- 198          ////        for(j=0;j<8;j++)                  //œ‘ æ“ª∏ˆ◊÷Ω⁄  “ª∏ˆ◊÷Ω⁄8Œª “≤æÕ «8∏ˆµ„
- 199          ////        {
- 200          ////          if((m&0x80)==0x80)              //≈–∂œ «∑Ò «“™–¥»Îµ„   »Áπ˚ « ∏¯◊÷ÃÂ—’…´
- 201          ////            Lcd_Write_Data(dcolor);       
- 202          ////          else                  //»Áπ˚≤ª « Œ™±≥æ∞…´  ∏¯—’…´
- 203          ////            Lcd_Write_Data(bgcolor);
- 204          ////          m<<=1;                        //◊Û“∆“ªŒª  ≈–∂œœ¬“ªµ„
- 205          ////        }
- 206          ////      }
- 207          ////    }
- 208          //    if(Font_Size == FONT_MEDIUM)
- 209          //    {
- 210          //      Address_set(x+Temp_Count*15,y,x + Temp_Count*15 + 15, y + 32 - 1);   // …Ë÷√Œ™◊›œÚœ‘ æ
- 211          //      for(i=0;i<64;i++)
- 212          //      {                   //32∏ˆ◊÷Ω⁄ √ø∏ˆ◊÷Ω⁄∂º“™“ª∏ˆµ„“ª∏ˆµ„¥¶¿Ì À˘“‘ «¥¶¿Ì¡À32X8¥Œ
- 213          //        m = Number_16_32_[Num * 64 + i];              //∂¡»°∂‘”¶◊÷Ω⁄ ˝æ›
- 214          //        for(j=0;j<8;j++)                  //œ‘ æ“ª∏ˆ◊÷Ω⁄  “ª∏ˆ◊÷Ω⁄8Œª “≤æÕ «8∏ˆµ„
- 215          //        {
- 216          //          if((m&0x80)==0x80)              //≈–∂œ «∑Ò «“™–¥»Îµ„   »Áπ˚ « ∏¯◊÷ÃÂ—’…´
- 217          //            Lcd_Write_Data(dcolor);     
- 218          //          else                  //»Áπ˚≤ª « Œ™±≥æ∞…´  ∏¯—’…´
- 219          //            Lcd_Write_Data(bgcolor);
- 220          //          m<<=1;                        //◊Û“∆“ªŒª  ≈–∂œœ¬“ªµ„
- 221          //        }
- 222          //      }
- 223          //    }
- 224          //    Temp_Count++;
- 225          //    str++;
- 226          //  }
- 227          //}
- 228          //8*16µƒ∫∫◊÷◊÷∫≈
- 229          void GUI_sprintf_hzstr8x(unsigned char x1,unsigned int y1,unsigned char *str,unsigned int dcolor,unsigned 
-             -int bgcolor)    
- 230          {  
- 231   1        unsigned char l=0;
- 232   1        while(*str)
- 233   1        {
-C51 COMPILER V9.59.0.0   GUI                                                               08/11/2020 16:24:49 PAGE 5   
 
- 234   2            GUI_sprintf_Asc_8_16(x1+l*8,y1,*str,dcolor,bgcolor,0);
- 235   2            l+=1;
- 236   2            str++;
- 237   2        } 
- 238   1      }
- 239          //8*16µƒASCII
- 240          void GUI_sprintf_Asc_8_16(unsigned char x,unsigned int y,unsigned char value,unsigned int dcolor,unsigned 
-             -int bgcolor,unsigned char mode) 
- 241          {  
- 242   1        unsigned char i,j;
- 243   1        unsigned char *temp=Asc_8_16_;    //temp «*tempµƒµÿ÷∑  ’‚¿ÔtempæÕ «zifuµƒ ◊µÿ÷∑       
- 244   1        temp+=(value-32)*16;   //»∑∂®“™œ‘ æµƒ÷µ
- 245   1                         //”√ascii±Ì  «∞32∏ˆascii√ª”–¥Ê»Îzifuø‚¿Ô À˘“‘“™ºı32
- 246   1                               //√ø∏ˆ◊÷∑˚”√16∏ˆ◊÷Ω⁄œ‘ æ À˘“‘‘⁄≥À“‘16  æÕ «∂‘”¶µƒœ‘ æŒªµƒ ◊µÿ÷∑
- 247   1          if(mode==0)Address_set(x,y,x+7,y+15);    //…Ë÷√«¯”Ú      
- 248   1          if(mode==1)Address_set(x,y,x+7,y+15); //…Ë÷√«¯”Ú          
- 249   1          for(j=0;j<16;j++)
- 250   1          {
- 251   2            for(i=0;i<8;i++)        //œ»∫·…®
- 252   2            {          
- 253   3              if((*temp&(1<<(7-i)))!=0)      //Ω´1 ◊Û“∆ »ª∫Û∂‘”¶ŒªΩ¯––œ‡”Î        
- 254   3                Lcd_Write_Data(dcolor);      //œ‘ æ◊÷∑˚—’…´
- 255   3               
- 256   3              else        
- 257   3                Lcd_Write_Data(bgcolor);       //œ‘ æ±≥æ∞—’…´   
- 258   3            }
- 259   2            temp++;                  //œ¬“ª◊÷Ω⁄
- 260   2          }
- 261   1      }
-
-C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

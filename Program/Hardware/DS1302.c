@@ -74,7 +74,7 @@ void DS_Init()
 {
 	unsigned char n;
 	DS_WriteByte(0x8E,0X00);		 //禁止写保护，就是关闭写保护功能
-	for (n=0; n<7; n++)//写入7个字节的时钟信号：分秒时日月周年
+	for (n=0; n<7; n++)//写入7个字节的时钟信号：秒 分 时 日 月 周 年
 	{
 		DS_WriteByte(WRITE_RTC_ADDR[n],TIME[n]);	
 	}
@@ -90,20 +90,9 @@ void DS_ReadTime()
 }
 void go_DS1302()
 {
-	unsigned char i;
 	DS_Init();
 	while(1)
 	{
-		Delay2000ms();
 		DS_ReadTime();
-		ES = 0;
-		for(i=0; i<7; i++)
-		{
-			SBUF = TIME[i];
-			while(!TI);
-			TI = 0;
-		}
-		ES = 1;
-		Delay2000ms();
 	}
 }

@@ -7,7 +7,6 @@ sbit DATA = P4^0;
 unsigned char Byte_temp;
 unsigned char str[5];
 unsigned char RH_data_H,RH_data_L,T_data_H,T_data_L,checkdata;
-
 void Readbyte()
 {
 	unsigned char i,bit_temp,flag;
@@ -79,45 +78,3 @@ void SendData(unsigned char *a)
 	}
 	ES = 1;	
 }
-//void Transvalue()
-//{
-//	unsigned char byte,sum,i,t;
-//	unsigned char *j;
-//	byte = str[0];
-//	for(i=0; i<8; i++)
-//	{
-//		t = byte & 0x80;
-//		byte <<= 1;
-//		sum = 2*sum + t;
-//	}
-//	*j = sum;
-////	sum = 0;
-//	t = 0;
-//	SBUF = 1;
-//	while(!TI);
-//	TI = 0;
-//}
-void go_DHT11()
-{
-		Delay2000ms();
-		DHT11_init();
-		Delay100us();
-	  str[0]=RH_data_H;
-	  str[1]=RH_data_L;
-	  str[2]=T_data_H;
-	  str[3]=T_data_L;
-	  str[4]=checkdata;
-	  SendData(str) ;  	
-//		Display_ASCII8X16(10,10,RH_data_H);
-}
-
-
-
-
-
-
-
-
-
-
-

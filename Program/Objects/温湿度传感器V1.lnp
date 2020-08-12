@@ -5,6 +5,7 @@
 ".\Objects\DHT11.obj",
 ".\Objects\DS1302.obj",
 ".\Objects\Lcd.obj",
+".\Objects\GUI.obj",
 ".\Objects\Delay.obj",
 ".\Objects\Server.obj" 
 TO ".\Objects\ÎÂÊª¶È´«¸ÐÆ÷V1" 

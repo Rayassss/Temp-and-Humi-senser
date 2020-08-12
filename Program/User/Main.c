@@ -6,11 +6,10 @@
 #include "Lcd.h"
 #include "GUI.h"
 #include "Key.h"
+
 void main()
 {
 	Uart1_Init();
-	
-//	Transvalue();
 	bl = 0;
 	Delay2000ms()	;
 	bl = 1;
@@ -18,7 +17,7 @@ void main()
 	dsp_single_colour(WHITE);
 	while(1)
 	{
-		go_DHT11();
+		Draw_DHT11();
 	}
 }
 

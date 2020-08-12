@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   DHT11                                                             08/11/2020 21:54:32 PAGE 1   
+C51 COMPILER V9.59.0.0   DHT11                                                             08/12/2020 16:46:06 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE DHT11
@@ -18,128 +18,83 @@ line level    source
    7          unsigned char Byte_temp;
    8          unsigned char str[5];
    9          unsigned char RH_data_H,RH_data_L,T_data_H,T_data_L,checkdata;
-  10          
-  11          void Readbyte()
-  12          {
-  13   1        unsigned char i,bit_temp,flag;
-  14   1        for(i=0; i<8; i++)     
-  15   1        {
-  16   2          flag = 2; 
-  17   2          while((!DATA) && flag++);
-  18   2          Delay30us();
-  19   2          bit_temp = 0;
-  20   2          if(DATA)bit_temp = 1;
-  21   2          flag = 2;
-  22   2          while((DATA) && flag++);    
-  23   2          if(flag == 1)break;      
-  24   2          Byte_temp <<= 1;
-  25   2          Byte_temp |= bit_temp;  
-  26   2        } 
-  27   1      }
-  28          void DHT11_init()
-  29          {
-  30   1        unsigned char RH_data_H_temp,RH_data_L_temp,T_data_H_temp,T_data_L_temp,checkdata_temp;
-  31   1        unsigned char flag;
-  32   1        DATA = 0;
-  33   1        Delay18ms();
-  34   1        DATA = 1;
-  35   1        Delay40us();
-  36   1        DATA = 1;
-  37   1        if(!DATA)
-  38   1        {
-  39   2          flag = 2;
-  40   2          while((!DATA) && (flag++));
-  41   2          flag = 2;
-  42   2          while((DATA) && (flag++));
-  43   2          Readbyte();
-  44   2          RH_data_H_temp = Byte_temp;
-  45   2          Readbyte();
-  46   2          RH_data_L_temp = Byte_temp;
-  47   2          Readbyte();
-  48   2          T_data_H_temp = Byte_temp;
-  49   2          Readbyte();
-  50   2          T_data_L_temp = Byte_temp;
-  51   2          Readbyte();
-  52   2          checkdata_temp = Byte_temp;
-  53   2          DATA = 1;
-C51 COMPILER V9.59.0.0   DHT11                                                             08/11/2020 21:54:32 PAGE 2   
+  10          void Readbyte()
+  11          {
+  12   1        unsigned char i,bit_temp,flag;
+  13   1        for(i=0; i<8; i++)     
+  14   1        {
+  15   2          flag = 2; 
+  16   2          while((!DATA) && flag++);
+  17   2          Delay30us();
+  18   2          bit_temp = 0;
+  19   2          if(DATA)bit_temp = 1;
+  20   2          flag = 2;
+  21   2          while((DATA) && flag++);    
+  22   2          if(flag == 1)break;      
+  23   2          Byte_temp <<= 1;
+  24   2          Byte_temp |= bit_temp;  
+  25   2        } 
+  26   1      }
+  27          void DHT11_init()
+  28          {
+  29   1        unsigned char RH_data_H_temp,RH_data_L_temp,T_data_H_temp,T_data_L_temp,checkdata_temp;
+  30   1        unsigned char flag;
+  31   1        DATA = 0;
+  32   1        Delay18ms();
+  33   1        DATA = 1;
+  34   1        Delay40us();
+  35   1        DATA = 1;
+  36   1        if(!DATA)
+  37   1        {
+  38   2          flag = 2;
+  39   2          while((!DATA) && (flag++));
+  40   2          flag = 2;
+  41   2          while((DATA) && (flag++));
+  42   2          Readbyte();
+  43   2          RH_data_H_temp = Byte_temp;
+  44   2          Readbyte();
+  45   2          RH_data_L_temp = Byte_temp;
+  46   2          Readbyte();
+  47   2          T_data_H_temp = Byte_temp;
+  48   2          Readbyte();
+  49   2          T_data_L_temp = Byte_temp;
+  50   2          Readbyte();
+  51   2          checkdata_temp = Byte_temp;
+  52   2          DATA = 1;
+  53   2          if((T_data_H_temp+T_data_L_temp+RH_data_H_temp+RH_data_L_temp) == checkdata_temp)
+C51 COMPILER V9.59.0.0   DHT11                                                             08/12/2020 16:46:06 PAGE 2   
 
-  54   2          if((T_data_H_temp+T_data_L_temp+RH_data_H_temp+RH_data_L_temp) == checkdata_temp)
-  55   2          {
-  56   3            RH_data_H = RH_data_H_temp;
-  57   3            RH_data_L = RH_data_L_temp;
-  58   3            T_data_H  = T_data_H_temp;
-  59   3            T_data_L  = T_data_L_temp;
-  60   3            checkdata = checkdata_temp;     
-  61   3          }
-  62   2        }
-  63   1      }
-  64          void SendData(unsigned char *a)
-  65          {
-  66   1        unsigned char outdata[5];
-  67   1        unsigned char i;
-  68   1        outdata[0] = a[0]; 
-  69   1        outdata[1] = a[1];
-  70   1        outdata[2] = a[2];
-  71   1        outdata[3] = a[3];
-  72   1        outdata[4] = a[4];
-  73   1        ES = 0;
-  74   1        for(i=0; i<5; i++)
-  75   1        {
-  76   2          SBUF = outdata[i];
-  77   2          while(!TI);
-  78   2          TI = 0;
-  79   2        }
-  80   1        ES = 1; 
-  81   1      }
-  82          //void Transvalue()
-  83          //{
-  84          //  unsigned char byte,sum,i,t;
-  85          //  unsigned char *j;
-  86          //  byte = str[0];
-  87          //  for(i=0; i<8; i++)
-  88          //  {
-  89          //    t = byte & 0x80;
-  90          //    byte <<= 1;
-  91          //    sum = 2*sum + t;
-  92          //  }
-  93          //  *j = sum;
-  94          ////  sum = 0;
-  95          //  t = 0;
-  96          //  SBUF = 1;
-  97          //  while(!TI);
-  98          //  TI = 0;
-  99          //}
- 100          void go_DHT11()
- 101          {
- 102   1          Delay2000ms();
- 103   1          DHT11_init();
- 104   1          Delay100us();
- 105   1          str[0]=RH_data_H;
- 106   1          str[1]=RH_data_L;
- 107   1          str[2]=T_data_H;
- 108   1          str[3]=T_data_L;
- 109   1          str[4]=checkdata;
- 110   1          SendData(str) ;   
- 111   1      //    Display_ASCII8X16(10,10,RH_data_H);
- 112   1      }
- 113          
- 114          
- 115          
-C51 COMPILER V9.59.0.0   DHT11                                                             08/11/2020 21:54:32 PAGE 3   
-
- 116          
- 117          
- 118          
- 119          
- 120          
- 121          
- 122          
- 123          
+  54   2          {
+  55   3            RH_data_H = RH_data_H_temp;
+  56   3            RH_data_L = RH_data_L_temp;
+  57   3            T_data_H  = T_data_H_temp;
+  58   3            T_data_L  = T_data_L_temp;
+  59   3            checkdata = checkdata_temp;     
+  60   3          }
+  61   2        }
+  62   1      }
+  63          void SendData(unsigned char *a)
+  64          {
+  65   1        unsigned char outdata[5];
+  66   1        unsigned char i;
+  67   1        outdata[0] = a[0]; 
+  68   1        outdata[1] = a[1];
+  69   1        outdata[2] = a[2];
+  70   1        outdata[3] = a[3];
+  71   1        outdata[4] = a[4];
+  72   1        ES = 0;
+  73   1        for(i=0; i<5; i++)
+  74   1        {
+  75   2          SBUF = outdata[i];
+  76   2          while(!TI);
+  77   2          TI = 0;
+  78   2        }
+  79   1        ES = 1; 
+  80   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    411    ----
+   CODE SIZE        =    353    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =     11      12
    PDATA SIZE       =   ----    ----

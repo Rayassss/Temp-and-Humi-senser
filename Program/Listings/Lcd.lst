@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   LCD                                                               08/11/2020 16:41:32 PAGE 1   
+C51 COMPILER V9.59.0.0   LCD                                                               08/12/2020 22:14:48 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE LCD
@@ -62,7 +62,7 @@ line level    source
   52          //向液晶屏写一个16位数据
   53          void  Lcd_WriteData_16(unsigned int Data)
   54          {
-C51 COMPILER V9.59.0.0   LCD                                                               08/11/2020 16:41:32 PAGE 2   
+C51 COMPILER V9.59.0.0   LCD                                                               08/12/2020 22:14:48 PAGE 2   
 
   55   1        unsigned char i=0;
   56   1        cs=0;
@@ -126,7 +126,7 @@ line level    source
  114   1      
  115   1        Lcd_WriteIndex(0xC3); 
  116   1        Lcd_WriteData(0x8A); 
-C51 COMPILER V9.59.0.0   LCD                                                               08/11/2020 16:41:32 PAGE 3   
+C51 COMPILER V9.59.0.0   LCD                                                               08/12/2020 22:14:48 PAGE 3   
 
  117   1        Lcd_WriteData(0x2A); 
  118   1        Lcd_WriteIndex(0xC4); 
@@ -190,7 +190,7 @@ line level    source
  176   1        
  177   1        Lcd_WriteIndex(0xF0); //Enable test command  
  178   1        Lcd_WriteData(0x01); 
-C51 COMPILER V9.59.0.0   LCD                                                               08/11/2020 16:41:32 PAGE 4   
+C51 COMPILER V9.59.0.0   LCD                                                               08/12/2020 22:14:48 PAGE 4   
 
  179   1        Lcd_WriteIndex(0xF6); //Disable ram power save mode 
  180   1        Lcd_WriteData(0x00); 
@@ -254,7 +254,7 @@ line level    source
  237          void dsp_single_colour(int color)
  238          {
  239   1        unsigned char i,j;
-C51 COMPILER V9.59.0.0   LCD                                                               08/11/2020 16:41:32 PAGE 5   
+C51 COMPILER V9.59.0.0   LCD                                                               08/12/2020 22:14:48 PAGE 5   
 
  240   1        Lcd_SetRegion(0,0,128-1,160-1,2);
  241   1        for (i=0;i<160;i++)
@@ -268,7 +268,7 @@ line level    source
  249   1        unsigned char qm;
  250   1        long int ulOffset;
  251   1        char  ywbuf[32],temp[2];
- 252   1        for(i = 0; i<strlen((char*)s);i++)
+ 252   1        for(i = 0; i<strlen((unsigned char*)s);i++)
  253   1        {
  254   2          if(((unsigned char)(*(s+i))) >= 161)
  255   2          {
@@ -318,7 +318,7 @@ line level    source
  299          {
  300   1          lcd_initial();
  301   1          bl=1;
-C51 COMPILER V9.59.0.0   LCD                                                               08/11/2020 16:41:32 PAGE 6   
+C51 COMPILER V9.59.0.0   LCD                                                               08/12/2020 22:14:48 PAGE 6   
 
  302   1          dsp_single_colour(WHITE);//白色
  303   1          Display_Desc();         //版本

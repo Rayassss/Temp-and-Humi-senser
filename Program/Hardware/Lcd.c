@@ -249,7 +249,7 @@ void Display_ASCII8X16(unsigned int x0,unsigned int y0,unsigned char *s)
 	unsigned char qm;
 	long int ulOffset;
 	char  ywbuf[32],temp[2];
-	for(i = 0; i<strlen((char*)s);i++)
+	for(i = 0; i<strlen((unsigned char*)s);i++)
 	{
 		if(((unsigned char)(*(s+i))) >= 161)
 		{

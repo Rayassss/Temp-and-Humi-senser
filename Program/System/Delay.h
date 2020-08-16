@@ -10,5 +10,7 @@ void Delay20ms();
 void Delay18ms();
 void Delay2000ms();
 void Delay100us();
+void Delay100ms()	;
+void Delay1000ms();
 
 #endif

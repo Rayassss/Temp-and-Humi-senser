@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   GUI                                                               08/12/2020 22:11:50 PAGE 1   
+C51 COMPILER V9.59.0.0   GUI                                                               08/15/2020 16:08:46 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE GUI
@@ -9,76 +9,83 @@ COMPILER INVOKED BY: D:\KEIL5_5.29\C51\BIN\C51.EXE App\GUI.c LARGE ROM(COMPACT) 
 line level    source
 
    1          #include "Lcd.h"
-   2          #include "Font.h"
-   3          #include "GUI.h"
-   4          #include "Delay.h"
-   5          #include "DHT11.h"
-   6          #include "DS1302.h"
-   7          unsigned char code Table[] = "0123456789";
-   8          extern unsigned char TIME[7];
-   9          extern unsigned char RH_data_H,RH_data_L,T_data_H,T_data_L,checkdata;
-  10          void Draw_DHT11()
-  11          {
-  12   1        unsigned char RH[2],T[2],str[5];
-  13   1          Delay2000ms();
-  14   1          DHT11_init();
-  15   1          Delay100us();
-  16   1          str[0]=RH_data_H;
-  17   1          str[1]=RH_data_L;
-  18   1          str[2]=T_data_H;
-  19   1          str[3]=T_data_L;
-  20   1          str[4]=checkdata;
-  21   1      //    SendData(str) ;  
-  22   1      //    RH[0] = Table[RH_data_H/10];
-  23   1      //    RH[1] = Table[RH_data_H%10];
-  24   1      //    Display_ASCII8X16(10,10,RH);
-  25   1      //    T[0] = Table[T_data_H/10];
-  26   1      //    T[1] = Table[T_data_H%10];
-  27   1          Display_ASCII8X16(10,30,str);
-  28   1      }
-*** WARNING C280 IN LINE 12 OF App\GUI.c: 'RH': unreferenced local variable
-*** WARNING C280 IN LINE 12 OF App\GUI.c: 'T': unreferenced local variable
-  29          void Draw_DS1302()
-  30          {
-  31   1        unsigned char Sec[2],Min[2],Hour[2],Date[2],Mon[2],Day[2],Year[2];
-  32   1        DS_ReadTime();
-  33   1        Delay20ms();
-  34   1        Sec[0] = Table[TIME[0]/10];
-  35   1        Sec[1] = Table[TIME[1]%10];
-  36   1        Display_ASCII8X16(10,30,Sec);
-  37   1      //  Min[0] = Table[TIME[0]/10];
-  38   1      //  Min[1] = Table[TIME[1]%10];
-  39   1      //  Display_ASCII8X16(10,40,Min);
-  40   1      //  Hour[0] = Table[TIME[0]/10];
-  41   1      //  Hour[1] = Table[TIME[1]%10];
-  42   1      //  Display_ASCII8X16(10,50,Hour);
-  43   1      //  Date[0] = Table[TIME[0]/10];
-  44   1      //  Date[1] = Table[TIME[1]%10];
-  45   1      //  Display_ASCII8X16(10,60,Date);
-  46   1      //  Mon[0] = Table[TIME[0]/10];
-  47   1      //  Mon[1] = Table[TIME[1]%10];
-  48   1      //  Display_ASCII8X16(10,70,Mon);
-  49   1      //  Day[0] = Table[TIME[0]/10];
-  50   1      //  Day[1] = Table[TIME[1]%10];
-  51   1      //  Display_ASCII8X16(10,80,Day);
-  52   1      //  Year[0] = Table[TIME[0]/10];
-C51 COMPILER V9.59.0.0   GUI                                                               08/12/2020 22:11:50 PAGE 2   
+   2          #include "GUI.h"
+   3          #include "Delay.h"
+   4          #include "DHT11.h"
+   5          #include "DS1302.h"
+   6          #include "stdio.h"
+   7          #include "string.h"
+   8          unsigned char code Table[] = "0123456789";
+   9          extern unsigned char TIME[7];
+  10          extern unsigned char RH_data_H,RH_data_L,T_data_H,T_data_L,checkdata;
+  11          void Draw_DHT11()
+  12          {
+  13   1          unsigned char RH[2] = {0},T[2]= {0};
+  14   1          RH_data_H = 0,RH_data_L = 0,T_data_H = 0,T_data_L = 0,checkdata = 0;
+  15   1      //    unsigned char str[5];
+  16   1            DHT11_init();
+  17   1            Delay2000ms();
+  18   1      //    str[0]=RH_data_H;
+  19   1      //    str[1]=RH_data_L;
+  20   1      //    str[2]=T_data_H;
+  21   1      //    str[3]=T_data_L;
+  22   1      //    str[4]=checkdata;
+  23   1      //    SendData(str) ;  
+  24   1          RH[0] = '0' + (RH_data_H/10);
+  25   1          RH[1] = '0' + (RH_data_H%10);
+  26   1          Display_ASCII8X16(10,50,"%RH=");
+  27   1          Display_ASCII8X16(42,50,RH);
+  28   1          T[0] = '0' + (T_data_H/10);
+  29   1          T[1] = '0' + (T_data_H%10);
+  30   1          Display_ASCII8X16(10,70,"Tmp=");
+  31   1          Display_ASCII8X16(42,70,T);
+  32   1      }
+  33          void Draw_DS1302()
+  34          {
+  35   1        unsigned char Sec[2] = {0},Min[2] = {0},Hour[2] = {0},Date[2] = {0},Mon[2] = {0},Day[2] = {0},Year[2] = {
+             -0};
+  36   1        DS_ReadTime();
+  37   1        Delay20ms();
+  38   1        Sec[0] = Table[TIME[0]/16];
+  39   1        Sec[1] = Table[TIME[0]&0x0f];
+  40   1        Display_ASCII8X16(46,5,Sec);
+  41   1        
+  42   1        Min[0] = Table[TIME[1]/16];
+  43   1        Min[1] = Table[TIME[1]&0x0f];
+  44   1        Display_ASCII8X16(24,5,Min);
+  45   1        Display_ASCII8X16(40,5,":");
+  46   1        
+  47   1        Hour[0] = Table[TIME[2]/16];
+  48   1        Hour[1] = Table[TIME[2]&0x0f];
+  49   1        Display_ASCII8X16(2,5,Hour);
+  50   1        Display_ASCII8X16(18,5,":");
+  51   1        
+  52   1        Date[0] = Table[TIME[3]/16];
+  53   1        Date[1] = Table[TIME[3]%16];
+C51 COMPILER V9.59.0.0   GUI                                                               08/15/2020 16:08:46 PAGE 2   
 
-  53   1      //  Year[1] = Table[TIME[1]%10];
-  54   1      //  Display_ASCII8X16(10,90,Year);
-  55   1      }
-*** WARNING C280 IN LINE 31 OF App\GUI.c: 'Min': unreferenced local variable
-*** WARNING C280 IN LINE 31 OF App\GUI.c: 'Hour': unreferenced local variable
-*** WARNING C280 IN LINE 31 OF App\GUI.c: 'Date': unreferenced local variable
-*** WARNING C280 IN LINE 31 OF App\GUI.c: 'Mon': unreferenced local variable
-*** WARNING C280 IN LINE 31 OF App\GUI.c: 'Day': unreferenced local variable
-*** WARNING C280 IN LINE 31 OF App\GUI.c: 'Year': unreferenced local variable
+  54   1        Display_ASCII8X16(67,20,Date);
+  55   1        
+  56   1        Mon[0] = Table[TIME[4]/16];
+  57   1        Mon[1] = Table[TIME[4]%16];
+  58   1        Display_ASCII8X16(50,20,Mon);
+  59   1        
+  60   1      //  Day[0] = Table[TIME[5]/16];
+  61   1      //  Day[1] = Table[TIME[5]%16];
+  62   1      //  Display_ASCII8X16(10,80,Day);
+  63   1        
+  64   1        Year[0] = Table[TIME[6]/16];
+  65   1        Year[1] = Table[TIME[6]%16];
+  66   1        Display_ASCII8X16(19,20,Year);
+  67   1        Display_ASCII8X16(2,20,"20");
+  68   1      
+  69   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    123    ----
-   CONSTANT SIZE    =   3811    ----
-   XDATA SIZE       =   ----      23
+   CODE SIZE        =    639    ----
+   CONSTANT SIZE    =     44    ----
+   XDATA SIZE       =   ----      18
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
@@ -86,4 +93,4 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  8 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

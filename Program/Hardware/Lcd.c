@@ -5,6 +5,7 @@
 #include "string.h"
 #include "AsciiLib.h"
 #include "Delay.h"
+#include "Font.h"
 //sbit bl        =P4^4;//接模块BL引脚，背光可以采用IO控制或者PWM控制，也可以直接接到高电平常亮
 sbit scl       =P1^1;//接模块CLK引脚,接裸屏Pin9_SCL
 sbit sda       =P1^2;//接模块DIN/MOSI引脚，接裸屏Pin8_SDA
@@ -242,6 +243,14 @@ void dsp_single_colour(int color)
     	for (j=0;j<128;j++)
         	Lcd_WriteData_16(color);
 }
+void Dsp_arc_area()
+{
+	unsigned char i,j;
+	Lcd_SetRegion(0,0,80,18,2);
+	for (i=0;i<18;i++)
+    	for (j=0;j<80;j++)
+        	Lcd_WriteData_16(WHITE);
+}
 //显示一个英文字符
 void Display_ASCII8X16(unsigned int x0,unsigned int y0,unsigned char *s)
 {
@@ -302,5 +311,47 @@ void go_Lcd()
 		dsp_single_colour(WHITE);//白色
 		Display_Desc();         //版本
 }
-
-
+//void Lcd_showchar(unsigned char x,unsigned char y,int bgcolor,int Fontcolor)
+//{
+//	int i = 0,j = 0;
+//	unsigned char Temp = 0;
+//	Lcd_SetRegion(x,y,x + 79,y + 127,1);
+//	for(i=0; i<80*16; i++)
+//	{
+//		Temp = Font_A[i];
+//		for(j=0; j<8; j++)
+//		{
+//			if(Temp & 0x80)
+//			{
+//				Lcd_WriteData_16(Fontcolor);
+//			}
+//			else
+//			{
+//				Lcd_WriteData_16(bgcolor);
+//			}
+//			Temp <<= 1;
+//		}
+//	}
+//}
+//void GUI_sprintf_Asc_8_16(unsigned char x,unsigned int y,unsigned char value,unsigned int dcolor,unsigned int bgcolor,unsigned char mode)	
+//{  
+//	unsigned char i,j;
+//	unsigned char *temp=Asc_8_16_;    //temp是*temp的地址  这里temp就是zifu的首地址       
+//	temp+=(value-32)*16;   //确定要显示的值
+//				           //用ascii表  前32个ascii没有存入zifu库里 所以要减32
+//	                       //每个字符用16个字节显示 所以在乘以16  就是对应的显示位的首地址
+//	  if(mode==0)Lcd_SetRegion(x,y,x+7,y+15,1);    //设置区域		   
+//	  if(mode==1)Lcd_SetRegion(x,y,x+7,y+15,1); //设置区域   		    
+//		for(j=0;j<16;j++)
+//		{
+//			for(i=0;i<8;i++)		    //先横扫
+//			{ 		     
+//			 	if((*temp&(1<<(7-i)))!=0)		   //将1 左移 然后对应位进行相与 				
+//				  Lcd_Write_Data(dcolor);		   //显示字符颜色
+//				 
+//				else				
+//				  Lcd_Write_Data(bgcolor);		   //显示背景颜色		
+//			}
+//			temp++;								   //下一字节
+//		}
+//}

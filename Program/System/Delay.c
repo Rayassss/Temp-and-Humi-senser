@@ -127,6 +127,40 @@ void Delay2000ms()		//@24.000MHz
 		} while (--j);
 	} while (--i);
 }
+void Delay100ms()		//@24.000MHz
+{
+	unsigned char i, j, k;
+
+	_nop_();
+	_nop_();
+	i = 13;
+	j = 45;
+	k = 214;
+	do
+	{
+		do
+		{
+			while (--k);
+		} while (--j);
+	} while (--i);
+}
+void Delay1000ms()		//@24.000MHz
+{
+	unsigned char i, j, k;
+
+	_nop_();
+	_nop_();
+	i = 122;
+	j = 193;
+	k = 128;
+	do
+	{
+		do
+		{
+			while (--k);
+		} while (--j);
+	} while (--i);
+}
 
 
 

@@ -23,4 +23,6 @@ void Display_ASCII8X16(unsigned int x0,unsigned int y0,unsigned char *s);
 void LCD_Clear(unsigned int Color);
 void Display_Desc();
 void go_Lcd();
+void Lcd_showchar(unsigned char x,unsigned char y,int bgcolor,int Fontcolor);
+void Dsp_arc_area();
 #endif

@@ -5,20 +5,28 @@
 #include "DS1302.h"
 #include "Lcd.h"
 #include "GUI.h"
+#include "Led.h"
+
 #include "Key.h"
 
 void main()
 {
 	Uart1_Init();
-	DS_Init();
+//	DS_Init();
 	bl = 0;
-	Delay2000ms()	;
+	Delay1000ms()	;
 	bl = 1;
 	lcd_initial();
 	dsp_single_colour(WHITE);
+	Dsp_arc_area();
 	Draw_DHT11();
 	Draw_DS1302();
-	while(1);
+	while(1)
+	{
+		Dsp_arc_area();
+		Draw_DS1302();
+		Keyinit_1();
+	}
 }
 
 

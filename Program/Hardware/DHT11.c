@@ -4,8 +4,7 @@
 #include "Lcd.h"
 #include "Math.h"
 sbit DATA = P4^0;
-unsigned char Byte_temp;
-unsigned char str[5];
+unsigned char Byte_temp = 0;
 unsigned char RH_data_H,RH_data_L,T_data_H,T_data_L,checkdata;
 void Readbyte()
 {
@@ -28,6 +27,8 @@ void DHT11_init()
 {
 	unsigned char RH_data_H_temp,RH_data_L_temp,T_data_H_temp,T_data_L_temp,checkdata_temp;
 	unsigned char flag;
+	RH_data_H_temp = 0,RH_data_L_temp = 0,T_data_H_temp = 0,T_data_L_temp = 0,checkdata_temp = 0;
+	Delay1000ms();
 	DATA = 0;
 	Delay18ms();
 	DATA = 1;

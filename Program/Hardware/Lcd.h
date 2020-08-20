@@ -25,4 +25,5 @@ void Display_Desc();
 void go_Lcd();
 void Lcd_showchar(unsigned char x,unsigned char y,int bgcolor,int Fontcolor);
 void Dsp_arc_area();
+void Display_Num(unsigned char x,unsigned int  y,unsigned char *str,unsigned int dcolor,unsigned int bgcolor);
 #endif

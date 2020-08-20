@@ -33,6 +33,7 @@ void Draw_DHT11()
 void Draw_DS1302()
 {
 	unsigned char Sec[2] = {0},Min[2] = {0},Hour[2] = {0},Date[2] = {0},Mon[2] = {0},Day[2] = {0},Year[2] = {0};
+	Delay2000ms();
 	DS_ReadTime();
 	Delay20ms();
 	Sec[0] = Table[TIME[0]/16];

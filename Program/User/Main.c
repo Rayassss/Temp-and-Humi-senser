@@ -6,32 +6,31 @@
 #include "Lcd.h"
 #include "GUI.h"
 #include "Led.h"
-
 #include "Key.h"
-
+#include "stdio.h"
+#include "string.h"
 void main()
 {
+	char i = 1;
+	char Temp[10];
 	Uart1_Init();
 //	DS_Init();
-	bl = 0;
-	Delay1000ms()	;
-	bl = 1;
 	lcd_initial();
 	dsp_single_colour(WHITE);
-	Dsp_arc_area();
-	Draw_DHT11();
-	Draw_DS1302();
-	while(1)
-	{
-		Dsp_arc_area();
-		Draw_DS1302();
-		Keyinit_1();
-	}
+//	Dsp_arc_area();
+//	Draw_DHT11();
+//	Draw_DS1302();
+	memset(Temp,'1',sizeof(Temp));
+//	sprintf(Temp,"%d",123);
+	Display_Num(1,1,&Temp[0],BLACK,WHITE);
+	while(1);
 }
 
 
 void UART1_Isr() interrupt 4
 {
+	
+	
 	//---免掉点下载，波特率默认57600bps--------
 	static unsigned char uart_ser = 0;
 	if(TI==1)   

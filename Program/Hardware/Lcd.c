@@ -73,6 +73,9 @@ void Reset(void)
 //液晶屏初始化 for S6D02A1
 void lcd_initial()
 {
+	bl = 0;
+	Delay1000ms()	;
+	bl = 1;
 	Reset();//Reset before LCD Init.
 		
 	//LCD Init For 1.44Inch LCD Panel with ST7735R.
@@ -287,6 +290,35 @@ void Display_ASCII8X16(unsigned int x0,unsigned int y0,unsigned char *s)
       }
 		}
 	}     	
+}
+void Display_Num(unsigned char x,unsigned int  y,char *str,unsigned int dcolor,unsigned int bgcolor)
+{
+	unsigned char Temp_Count = 0;
+	while(*str)
+	{
+		unsigned int i,Num;
+		unsigned char j,m;									//定义临时变量
+		Num = *str;
+		if(Num == '.')
+			Num = 10;
+		else
+			Num = Num - 48;  //ASCII转数字
+		Lcd_SetRegion(x+Temp_Count*15,y,x + Temp_Count*15 + 15, y + 32 - 1,1);	 // 设置为纵向显示
+			for(i=0;i<64;i++)
+			{								    //32个字节 每个字节都要一个点一个点处理 所以是处理了32X8次
+				m = Number_16_32_[Num * 64 + i];							//读取对应字节数据
+				for(j=0;j<8;j++) 									//显示一个字节  一个字节8位 也就是8个点
+				{
+					if((m&0x80)==0x80) 							//判断是否是要写入点 	 如果是 给字体颜色
+						Lcd_WriteData_16(dcolor);			
+					else									//如果不是 为背景色  给颜色
+						Lcd_WriteData_16(bgcolor);
+					m<<=1;										    //左移一位  判断下一点
+				}
+			}
+		Temp_Count++;
+		str++;
+	}
 }
 void LCD_Clear(unsigned int Color)
 {

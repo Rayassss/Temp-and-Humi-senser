@@ -7,23 +7,19 @@
 #include "GUI.h"
 #include "Led.h"
 #include "Key.h"
-#include "stdio.h"
-#include "string.h"
 void main()
 {
-	char i = 1;
-	char Temp[10];
+	
 	Uart1_Init();
-//	DS_Init();
+	DS_Init();
 	lcd_initial();
-	dsp_single_colour(WHITE);
-//	Dsp_arc_area();
 //	Draw_DHT11();
-//	Draw_DS1302();
-	memset(Temp,'1',sizeof(Temp));
-//	sprintf(Temp,"%d",123);
-	Display_Num(1,1,&Temp[0],BLACK,WHITE);
-	while(1);
+	Draw_DS1302();
+	while(1)
+	{
+		Keyinit_1();
+		Keyinit();
+	}
 }
 
 

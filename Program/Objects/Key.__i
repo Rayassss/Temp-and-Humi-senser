@@ -1,1 +1,0 @@
-"Hardware\Key.c" LARGE ROM(COMPACT) OPTIMIZE (8,SPEED) BROWSE INCDIR(.\User;.\System;.\Hardware;.\System;.\User) DEBUG OBJECTEXTEND PRINT(.\Listings\Key.lst) TABS (2) OBJECT(.\Objects\Key.obj)

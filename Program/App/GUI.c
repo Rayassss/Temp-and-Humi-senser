@@ -32,39 +32,49 @@ void Draw_DHT11()
 }
 void Draw_DS1302()
 {
-	unsigned char Sec[2] = {0},Min[2] = {0},Hour[2] = {0},Date[2] = {0},Mon[2] = {0},Day[2] = {0},Year[2] = {0};
+	unsigned char Temp[2] = {0};
 	Delay2000ms();
-	DS_ReadTime();
+//	DS_ReadTime();
 	Delay20ms();
-	Sec[0] = Table[TIME[0]/16];
-	Sec[1] = Table[TIME[0]&0x0f];
-	Display_ASCII8X16(46,5,Sec);
+	Temp[0] = Table[TIME[2]/16];//显示时间
+	Temp[1] = Table[TIME[2]&0x0f];
+	Display_ASCII8X16(1,2,Temp);
+	Display_ASCII8X16(34,14,":");
+	Temp[0] = 0;
+	Temp[1] = 0;
 	
-	Min[0] = Table[TIME[1]/16];
-	Min[1] = Table[TIME[1]&0x0f];
-	Display_ASCII8X16(24,5,Min);
-	Display_ASCII8X16(40,5,":");
+	Temp[0] = Table[TIME[1]/16];//显示分钟
+	Temp[1] = Table[TIME[1]&0x0f];
+	Display_ASCII8X16(50,2,Temp);
+	Display_ASCII8X16(80,14,":");
+	Temp[0] = 0;
+	Temp[1] = 0;	
 	
-	Hour[0] = Table[TIME[2]/16];
-	Hour[1] = Table[TIME[2]&0x0f];
-	Display_ASCII8X16(2,5,Hour);
-	Display_ASCII8X16(18,5,":");
+	Temp[0] = Table[TIME[0]/16];
+	Temp[1] = Table[TIME[0]&0x0f];
+	Display_ASCII8X16(102,2,Temp);
+	Temp[0] = 0;
+	Temp[1] = 0;
 	
-	Date[0] = Table[TIME[3]/16];
-	Date[1] = Table[TIME[3]%16];
-	Display_ASCII8X16(67,20,Date);
+	Temp[0] = Table[TIME[6]/16];
+	Temp[1] = Table[TIME[6]%16];
+	Display_ASCII8X16(1,40,"20");
+	Display_ASCII8X16(18,40,Temp);
+	Display_ASCII8X16(38,40,"/");
+	Temp[0] = 0;
+	Temp[1] = 0;
 	
-	Mon[0] = Table[TIME[4]/16];
-	Mon[1] = Table[TIME[4]%16];
-	Display_ASCII8X16(50,20,Mon);
+	Temp[0] = Table[TIME[4]/16];
+	Temp[1] = Table[TIME[4]%16];
+	Display_ASCII8X16(50,40,Temp);
+	Display_ASCII8X16(74,40,"/");
+	Temp[0] = 0;
+	Temp[1] = 0;
 	
-//	Day[0] = Table[TIME[5]/16];
-//	Day[1] = Table[TIME[5]%16];
-//	Display_ASCII8X16(10,80,Day);
+	Temp[0] = Table[TIME[3]/16];
+	Temp[1] = Table[TIME[3]%16];
+	Display_ASCII8X16(90,40,Temp);
+	Temp[0] = 0;
+	Temp[1] = 0;
 	
-	Year[0] = Table[TIME[6]/16];
-	Year[1] = Table[TIME[6]%16];
-	Display_ASCII8X16(19,20,Year);
-	Display_ASCII8X16(2,20,"20");
-
 }

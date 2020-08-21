@@ -188,7 +188,7 @@ void lcd_initial()
 	
 	
 	Lcd_WriteIndex(0x29);//Display on
-
+	dsp_single_colour(WHITE);
 }
 /*************************************************
 函数名：LCD_Set_Region
@@ -246,14 +246,6 @@ void dsp_single_colour(int color)
     	for (j=0;j<128;j++)
         	Lcd_WriteData_16(color);
 }
-void Dsp_arc_area()
-{
-	unsigned char i,j;
-	Lcd_SetRegion(0,0,80,18,2);
-	for (i=0;i<18;i++)
-    	for (j=0;j<80;j++)
-        	Lcd_WriteData_16(WHITE);
-}
 //显示一个英文字符
 void Display_ASCII8X16(unsigned int x0,unsigned int y0,unsigned char *s)
 {
@@ -284,14 +276,14 @@ void Display_ASCII8X16(unsigned int x0,unsigned int y0,unsigned char *s)
 				  	if(ywbuf[y]&(0x80 >> k))
 				   	{
 				  		xx=x0+x+i*8;
-				    	PutPixel(xx,y+y0,RED);
+				    	PutPixel(xx,y+y0,BLACK);
 				  	}						
 			   	}
       }
 		}
 	}     	
 }
-void Display_Num(unsigned char x,unsigned int  y,char *str,unsigned int dcolor,unsigned int bgcolor)
+void Display_Num(unsigned char x,unsigned char y,unsigned char *str)
 {
 	unsigned char Temp_Count = 0;
 	while(*str)
@@ -310,9 +302,9 @@ void Display_Num(unsigned char x,unsigned int  y,char *str,unsigned int dcolor,u
 				for(j=0;j<8;j++) 									//显示一个字节  一个字节8位 也就是8个点
 				{
 					if((m&0x80)==0x80) 							//判断是否是要写入点 	 如果是 给字体颜色
-						Lcd_WriteData_16(dcolor);			
+						Lcd_WriteData_16(BLACK);			
 					else									//如果不是 为背景色  给颜色
-						Lcd_WriteData_16(bgcolor);
+						Lcd_WriteData_16(WHITE);
 					m<<=1;										    //左移一位  判断下一点
 				}
 			}
@@ -332,58 +324,72 @@ void LCD_Clear(unsigned int Color)
 		}
 	}
 }
-void Display_Desc()
-{ 
-    Display_ASCII8X16(10,10,"Dreamix is so so beautiful");
-}
-void go_Lcd()
+void Lcd_arc_clear(unsigned char index)
 {
-		lcd_initial();
-		bl=1;
-		dsp_single_colour(WHITE);//白色
-		Display_Desc();         //版本
+	unsigned char i,j;
+	switch(index)
+	{
+		case HOUR:
+			Lcd_SetRegion(0,0,20,20,2);
+			for (i=0;i<20;i++)
+			{
+				for (j=0;j<20;j++)
+				{
+        	Lcd_WriteData_16(WHITE);
+				}
+			}
+			break;
+		case MIN:
+			Lcd_SetRegion(50,0,70,20,2);
+			for (i=0;i<20;i++)
+			{
+				for (j=0;j<20;j++)
+				{
+        	Lcd_WriteData_16(WHITE);
+				}
+			}
+			break;
+		case SEC:
+			Lcd_SetRegion(100,0,120,20,2);
+			for (i=0;i<20;i++)
+			{
+				for (j=0;j<20;j++)
+				{
+        	Lcd_WriteData_16(WHITE);
+				}
+			}
+			break;	
+		case YEAR:
+			Lcd_SetRegion(0,40,37,60,2);
+			for (i=0;i<37;i++)
+			{
+				for (j=0;j<20;j++)
+				{
+        	Lcd_WriteData_16(WHITE);
+				}
+			}
+			break;	
+		case MONTH:
+			Lcd_SetRegion(50,40,70,60,2);
+			for (i=0;i<20;i++)
+			{
+				for (j=0;j<20;j++)
+				{
+        	Lcd_WriteData_16(WHITE);
+				}
+			}
+			break;			
+		case DATE:
+			Lcd_SetRegion(90,40,110,60,2);
+			for (i=0;i<20;i++)
+			{
+				for (j=0;j<20;j++)
+				{
+        	Lcd_WriteData_16(WHITE);
+				}
+			}
+			break;
+	}
 }
-//void Lcd_showchar(unsigned char x,unsigned char y,int bgcolor,int Fontcolor)
-//{
-//	int i = 0,j = 0;
-//	unsigned char Temp = 0;
-//	Lcd_SetRegion(x,y,x + 79,y + 127,1);
-//	for(i=0; i<80*16; i++)
-//	{
-//		Temp = Font_A[i];
-//		for(j=0; j<8; j++)
-//		{
-//			if(Temp & 0x80)
-//			{
-//				Lcd_WriteData_16(Fontcolor);
-//			}
-//			else
-//			{
-//				Lcd_WriteData_16(bgcolor);
-//			}
-//			Temp <<= 1;
-//		}
-//	}
-//}
-//void GUI_sprintf_Asc_8_16(unsigned char x,unsigned int y,unsigned char value,unsigned int dcolor,unsigned int bgcolor,unsigned char mode)	
-//{  
-//	unsigned char i,j;
-//	unsigned char *temp=Asc_8_16_;    //temp是*temp的地址  这里temp就是zifu的首地址       
-//	temp+=(value-32)*16;   //确定要显示的值
-//				           //用ascii表  前32个ascii没有存入zifu库里 所以要减32
-//	                       //每个字符用16个字节显示 所以在乘以16  就是对应的显示位的首地址
-//	  if(mode==0)Lcd_SetRegion(x,y,x+7,y+15,1);    //设置区域		   
-//	  if(mode==1)Lcd_SetRegion(x,y,x+7,y+15,1); //设置区域   		    
-//		for(j=0;j<16;j++)
-//		{
-//			for(i=0;i<8;i++)		    //先横扫
-//			{ 		     
-//			 	if((*temp&(1<<(7-i)))!=0)		   //将1 左移 然后对应位进行相与 				
-//				  Lcd_Write_Data(dcolor);		   //显示字符颜色
-//				 
-//				else				
-//				  Lcd_Write_Data(bgcolor);		   //显示背景颜色		
-//			}
-//			temp++;								   //下一字节
-//		}
-//}
+
+

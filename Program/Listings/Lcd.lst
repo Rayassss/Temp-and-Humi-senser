@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   LCD                                                               08/19/2020 12:32:08 PAGE 1   
+C51 COMPILER V9.59.0.0   LCD                                                               08/21/2020 17:22:55 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE LCD
@@ -62,7 +62,7 @@ line level    source
   52   1      }
   53          //向液晶屏写一个16位数据
   54          void  Lcd_WriteData_16(unsigned int Data)
-C51 COMPILER V9.59.0.0   LCD                                                               08/19/2020 12:32:08 PAGE 2   
+C51 COMPILER V9.59.0.0   LCD                                                               08/21/2020 17:22:55 PAGE 2   
 
   55          {
   56   1        unsigned char i=0;
@@ -126,7 +126,7 @@ line level    source
  114   1      
  115   1        Lcd_WriteIndex(0xC2); 
  116   1        Lcd_WriteData(0x0A); 
-C51 COMPILER V9.59.0.0   LCD                                                               08/19/2020 12:32:08 PAGE 3   
+C51 COMPILER V9.59.0.0   LCD                                                               08/21/2020 17:22:55 PAGE 3   
 
  117   1        Lcd_WriteData(0x00); 
  118   1      
@@ -190,7 +190,7 @@ line level    source
  176   1        Lcd_WriteData(0x00);
  177   1        Lcd_WriteData(0x00+3);
  178   1        Lcd_WriteData(0x00);
-C51 COMPILER V9.59.0.0   LCD                                                               08/19/2020 12:32:08 PAGE 4   
+C51 COMPILER V9.59.0.0   LCD                                                               08/21/2020 17:22:55 PAGE 4   
 
  179   1        Lcd_WriteData(0x80+3);
  180   1        
@@ -204,7 +204,7 @@ line level    source
  188   1        
  189   1        
  190   1        Lcd_WriteIndex(0x29);//Display on
- 191   1      
+ 191   1        dsp_single_colour(WHITE);
  192   1      }
  193          /*************************************************
  194          函数名：LCD_Set_Region
@@ -254,7 +254,7 @@ line level    source
  237          {
  238   1        Lcd_SetRegion(x_start,y_start,x_start+1,y_start+1,2);
  239   1        Lcd_WriteData_16(color);
-C51 COMPILER V9.59.0.0   LCD                                                               08/19/2020 12:32:08 PAGE 5   
+C51 COMPILER V9.59.0.0   LCD                                                               08/21/2020 17:22:55 PAGE 5   
 
  240   1      }
  241          void dsp_single_colour(int color)
@@ -265,158 +265,163 @@ line level    source
  246   1            for (j=0;j<128;j++)
  247   1                Lcd_WriteData_16(color);
  248   1      }
- 249          void Dsp_arc_area()
- 250          {
- 251   1        unsigned char i,j;
- 252   1        Lcd_SetRegion(0,0,80,18,2);
- 253   1        for (i=0;i<18;i++)
- 254   1            for (j=0;j<80;j++)
- 255   1                Lcd_WriteData_16(WHITE);
- 256   1      }
- 257          //显示一个英文字符
- 258          void Display_ASCII8X16(unsigned int x0,unsigned int y0,unsigned char *s)
- 259          {
- 260   1        int i,j,k,x,y,xx;
- 261   1        unsigned char qm;
- 262   1        long int ulOffset;
- 263   1        char  ywbuf[32],temp[2];
- 264   1        for(i = 0; i<strlen((unsigned char*)s);i++)
- 265   1        {
- 266   2          if(((unsigned char)(*(s+i))) >= 161)
- 267   2          {
- 268   3            temp[0] = *(s+i);
- 269   3            temp[1] = '\0';
- 270   3          } 
- 271   2          else
- 272   2          {
- 273   3            qm = *(s+i);
- 274   3            ulOffset = (long int)(qm) * 16;   
- 275   3            for (j = 0; j < 16; j ++)
- 276   3            {
- 277   4              ywbuf[j]=Zk_ASCII8X16[ulOffset+j];
- 278   4            }          
- 279   3            for(y = 0;y < 16;y++)
- 280   3            {
- 281   4                for(x=0;x<8;x++) 
- 282   4                {
- 283   5                   k=x % 8;             
- 284   5                  if(ywbuf[y]&(0x80 >> k))
- 285   5                  {
- 286   6                    xx=x0+x+i*8;
- 287   6                    PutPixel(xx,y+y0,RED);
- 288   6                  }           
- 289   5                }
- 290   4            }
- 291   3          }
- 292   2        }       
- 293   1      }
- 294          void Display_Num(unsigned char x,unsigned int  y,char *str,unsigned int dcolor,unsigned int bgcolor)
- 295          {
- 296   1        unsigned char Temp_Count = 0;
- 297   1        while(*str)
- 298   1        {
- 299   2          unsigned int i,Num;
- 300   2          unsigned char j,m;                  //定义临时变量
- 301   2          Num = *str;
-C51 COMPILER V9.59.0.0   LCD                                                               08/19/2020 12:32:08 PAGE 6   
+ 249          //显示一个英文字符
+ 250          void Display_ASCII8X16(unsigned int x0,unsigned int y0,unsigned char *s)
+ 251          {
+ 252   1        int i,j,k,x,y,xx;
+ 253   1        unsigned char qm;
+ 254   1        long int ulOffset;
+ 255   1        char  ywbuf[32],temp[2];
+ 256   1        for(i = 0; i<strlen((unsigned char*)s);i++)
+ 257   1        {
+ 258   2          if(((unsigned char)(*(s+i))) >= 161)
+ 259   2          {
+ 260   3            temp[0] = *(s+i);
+ 261   3            temp[1] = '\0';
+ 262   3          } 
+ 263   2          else
+ 264   2          {
+ 265   3            qm = *(s+i);
+ 266   3            ulOffset = (long int)(qm) * 16;   
+ 267   3            for (j = 0; j < 16; j ++)
+ 268   3            {
+ 269   4              ywbuf[j]=Zk_ASCII8X16[ulOffset+j];
+ 270   4            }          
+ 271   3            for(y = 0;y < 16;y++)
+ 272   3            {
+ 273   4                for(x=0;x<8;x++) 
+ 274   4                {
+ 275   5                   k=x % 8;             
+ 276   5                  if(ywbuf[y]&(0x80 >> k))
+ 277   5                  {
+ 278   6                    xx=x0+x+i*8;
+ 279   6                    PutPixel(xx,y+y0,BLACK);
+ 280   6                  }           
+ 281   5                }
+ 282   4            }
+ 283   3          }
+ 284   2        }       
+ 285   1      }
+ 286          void Display_Num(unsigned char x,unsigned char y,unsigned char *str)
+ 287          {
+ 288   1        unsigned char Temp_Count = 0;
+ 289   1        while(*str)
+ 290   1        {
+ 291   2          unsigned int i,Num;
+ 292   2          unsigned char j,m;                  //定义临时变量
+ 293   2          Num = *str;
+ 294   2          if(Num == '.')
+ 295   2            Num = 10;
+ 296   2          else
+ 297   2            Num = Num - 48;  //ASCII转数字
+ 298   2          Lcd_SetRegion(x+Temp_Count*15,y,x + Temp_Count*15 + 15, y + 32 - 1,1);   // 设置为纵向显示
+ 299   2            for(i=0;i<64;i++)
+ 300   2            {                   //32个字节 每个字节都要一个点一个点处理 所以是处理了32X8次
+ 301   3              m = Number_16_32_[Num * 64 + i];              //读取对应字节数据
+C51 COMPILER V9.59.0.0   LCD                                                               08/21/2020 17:22:55 PAGE 6   
 
- 302   2          if(Num == '.')
- 303   2            Num = 10;
- 304   2          else
- 305   2            Num = Num - 48;  //ASCII转数字
- 306   2          Lcd_SetRegion(x+Temp_Count*15,y,x + Temp_Count*15 + 15, y + 32 - 1,1);   // 设置为纵向显示
- 307   2            for(i=0;i<64;i++)
- 308   2            {                   //32个字节 每个字节都要一个点一个点处理 所以是处理了32X8次
- 309   3              m = Number_16_32_[Num * 64 + i];              //读取对应字节数据
- 310   3              for(j=0;j<8;j++)                  //显示一个字节  一个字节8位 也就是8个点
- 311   3              {
- 312   4                if((m&0x80)==0x80)              //判断是否是要写入点   如果是 给字体颜色
- 313   4                  Lcd_WriteData_16(dcolor);     
- 314   4                else                  //如果不是 为背景色  给颜色
- 315   4                  Lcd_WriteData_16(bgcolor);
- 316   4                m<<=1;                        //左移一位  判断下一点
- 317   4              }
- 318   3            }
- 319   2          Temp_Count++;
- 320   2          str++;
- 321   2        }
- 322   1      }
- 323          void LCD_Clear(unsigned int Color)
- 324          {
- 325   1        unsigned char i,j;
- 326   1        Lcd_SetRegion(0,0,127,159,2);
- 327   1        for (i=0;i<160;i++)
- 328   1        {
- 329   2            for (j=0;j<128;j++)
- 330   2          {
- 331   3                Lcd_WriteData_16(Color);
- 332   3          }
- 333   2        }
- 334   1      }
- 335          void Display_Desc()
- 336          { 
- 337   1          Display_ASCII8X16(10,10,"Dreamix is so so beautiful");
- 338   1      }
- 339          void go_Lcd()
- 340          {
- 341   1          lcd_initial();
- 342   1          bl=1;
- 343   1          dsp_single_colour(WHITE);//白色
- 344   1          Display_Desc();         //版本
- 345   1      }
- 346          //void Lcd_showchar(unsigned char x,unsigned char y,int bgcolor,int Fontcolor)
- 347          //{
- 348          //  int i = 0,j = 0;
- 349          //  unsigned char Temp = 0;
- 350          //  Lcd_SetRegion(x,y,x + 79,y + 127,1);
- 351          //  for(i=0; i<80*16; i++)
- 352          //  {
- 353          //    Temp = Font_A[i];
- 354          //    for(j=0; j<8; j++)
- 355          //    {
- 356          //      if(Temp & 0x80)
- 357          //      {
- 358          //        Lcd_WriteData_16(Fontcolor);
- 359          //      }
- 360          //      else
- 361          //      {
- 362          //        Lcd_WriteData_16(bgcolor);
- 363          //      }
-C51 COMPILER V9.59.0.0   LCD                                                               08/19/2020 12:32:08 PAGE 7   
+ 302   3              for(j=0;j<8;j++)                  //显示一个字节  一个字节8位 也就是8个点
+ 303   3              {
+ 304   4                if((m&0x80)==0x80)              //判断是否是要写入点   如果是 给字体颜色
+ 305   4                  Lcd_WriteData_16(BLACK);      
+ 306   4                else                  //如果不是 为背景色  给颜色
+ 307   4                  Lcd_WriteData_16(WHITE);
+ 308   4                m<<=1;                        //左移一位  判断下一点
+ 309   4              }
+ 310   3            }
+ 311   2          Temp_Count++;
+ 312   2          str++;
+ 313   2        }
+ 314   1      }
+ 315          void LCD_Clear(unsigned int Color)
+ 316          {
+ 317   1        unsigned char i,j;
+ 318   1        Lcd_SetRegion(0,0,127,159,2);
+ 319   1        for (i=0;i<160;i++)
+ 320   1        {
+ 321   2            for (j=0;j<128;j++)
+ 322   2          {
+ 323   3                Lcd_WriteData_16(Color);
+ 324   3          }
+ 325   2        }
+ 326   1      }
+ 327          void Lcd_arc_clear(unsigned char index)
+ 328          {
+ 329   1        unsigned char i,j;
+ 330   1        switch(index)
+ 331   1        {
+ 332   2          case HOUR:
+ 333   2            Lcd_SetRegion(0,0,20,20,2);
+ 334   2            for (i=0;i<20;i++)
+ 335   2            {
+ 336   3              for (j=0;j<20;j++)
+ 337   3              {
+ 338   4                Lcd_WriteData_16(WHITE);
+ 339   4              }
+ 340   3            }
+ 341   2            break;
+ 342   2          case MIN:
+ 343   2            Lcd_SetRegion(50,0,70,20,2);
+ 344   2            for (i=0;i<20;i++)
+ 345   2            {
+ 346   3              for (j=0;j<20;j++)
+ 347   3              {
+ 348   4                Lcd_WriteData_16(WHITE);
+ 349   4              }
+ 350   3            }
+ 351   2            break;
+ 352   2          case SEC:
+ 353   2            Lcd_SetRegion(100,0,120,20,2);
+ 354   2            for (i=0;i<20;i++)
+ 355   2            {
+ 356   3              for (j=0;j<20;j++)
+ 357   3              {
+ 358   4                Lcd_WriteData_16(WHITE);
+ 359   4              }
+ 360   3            }
+ 361   2            break;  
+ 362   2          case YEAR:
+ 363   2            Lcd_SetRegion(0,40,37,60,2);
+C51 COMPILER V9.59.0.0   LCD                                                               08/21/2020 17:22:55 PAGE 7   
 
- 364          //      Temp <<= 1;
- 365          //    }
- 366          //  }
- 367          //}
- 368          //void GUI_sprintf_Asc_8_16(unsigned char x,unsigned int y,unsigned char value,unsigned int dcolor,unsigne
-             -d int bgcolor,unsigned char mode) 
- 369          //{  
- 370          //  unsigned char i,j;
- 371          //  unsigned char *temp=Asc_8_16_;    //temp是*temp的地址  这里temp就是zifu的首地址       
- 372          //  temp+=(value-32)*16;   //确定要显示的值
- 373          //                   //用ascii表  前32个ascii没有存入zifu库里 所以要减32
- 374          //                         //每个字符用16个字节显示 所以在乘以16  就是对应的显示位的首地址
- 375          //    if(mode==0)Lcd_SetRegion(x,y,x+7,y+15,1);    //设置区域      
- 376          //    if(mode==1)Lcd_SetRegion(x,y,x+7,y+15,1); //设置区域          
- 377          //    for(j=0;j<16;j++)
- 378          //    {
- 379          //      for(i=0;i<8;i++)        //先横扫
- 380          //      {          
- 381          //        if((*temp&(1<<(7-i)))!=0)      //将1 左移 然后对应位进行相与        
- 382          //          Lcd_Write_Data(dcolor);      //显示字符颜色
- 383          //         
- 384          //        else        
- 385          //          Lcd_Write_Data(bgcolor);       //显示背景颜色   
- 386          //      }
- 387          //      temp++;                  //下一字节
- 388          //    }
- 389          //}
+ 364   2            for (i=0;i<37;i++)
+ 365   2            {
+ 366   3              for (j=0;j<20;j++)
+ 367   3              {
+ 368   4                Lcd_WriteData_16(WHITE);
+ 369   4              }
+ 370   3            }
+ 371   2            break;  
+ 372   2          case MONTH:
+ 373   2            Lcd_SetRegion(50,40,70,60,2);
+ 374   2            for (i=0;i<20;i++)
+ 375   2            {
+ 376   3              for (j=0;j<20;j++)
+ 377   3              {
+ 378   4                Lcd_WriteData_16(WHITE);
+ 379   4              }
+ 380   3            }
+ 381   2            break;      
+ 382   2          case DATE:
+ 383   2            Lcd_SetRegion(90,40,110,60,2);
+ 384   2            for (i=0;i<20;i++)
+ 385   2            {
+ 386   3              for (j=0;j<20;j++)
+ 387   3              {
+ 388   4                Lcd_WriteData_16(WHITE);
+ 389   4              }
+ 390   3            }
+ 391   2            break;
+ 392   2        }
+ 393   1      }
+ 394          
+ 395          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1654    ----
-   CONSTANT SIZE    =   6108    ----
-   XDATA SIZE       =   ----      89
+   CODE SIZE        =   2078    ----
+   CONSTANT SIZE    =   6081    ----
+   XDATA SIZE       =   ----      86
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----

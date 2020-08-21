@@ -4,12 +4,20 @@
 #include "Led.h"
 #include "Lcd.h"
 #include "DS1302.h"
+#include "stdio.h"
+#include "string.h"
 sbit Key1 = P2^4;
 sbit Key2 = P2^5;
 sbit Key3 = P5^4;
 unsigned char counter1 = 0;
 unsigned char counter2 = 0;
 unsigned char counter3 = 0;
+int Temp_hour = 8;
+int Temp_min = 0;
+int Temp_sec = 0;
+int Temp_year = 20;
+int Temp_month = 6;
+int Temp_date = 15;
 extern unsigned char TIME[7];
 void Keyinit_1()
 {
@@ -18,6 +26,7 @@ void Keyinit_1()
 		Delayms(10);
 		if (!Key1)
 		{			
+			
 			counter1 = 1;
 			while(!Key1);
 		}
@@ -37,12 +46,7 @@ void Keyinit_2()
 }
 void Keyinit()//按一次k1调节秒，再按一次调节分钟，再按一次调节小时，再按一次调节日	//再按一次调节月，再按一次调节年，最后按一次确认数字，其中，Key2每次减一，Key3每次加一；					
 {	
-	char Temp_hour = 8;
-	char Temp_min = 0;
-	char Temp_sec = 0;
-	char Temp_year = 20;
-	char Temp_mouth = 6;
-	char Temp_date = 15;
+	char Temp[10];
 	Keyinit_1();
 	if(counter1 == 1)
 	{
@@ -58,8 +62,10 @@ void Keyinit()//按一次k1调节秒，再按一次调节分钟，再按一次调节小时，再按一次调节
 					{
 						Temp_hour = 8;			
 					}
-					Dsp_arc_area();
-					Display_ASCII8X16(2,5,&Temp_hour);
+					Lcd_arc_clear(HOUR);
+					memset(Temp,' ',sizeof(Temp));
+					sprintf(Temp,"%02d",Temp_hour);
+					Display_ASCII8X16(1,2,Temp);
 					while(!Key2);					
 				}			
 			}
@@ -73,8 +79,10 @@ void Keyinit()//按一次k1调节秒，再按一次调节分钟，再按一次调节小时，再按一次调节
 					{
 						Temp_hour = 8;
 					}
-					Dsp_arc_area();
-					Display_ASCII8X16(2,5,&Temp_hour);
+					Lcd_arc_clear(HOUR);
+					memset(Temp,' ',sizeof(Temp));
+					sprintf(Temp,"%02d",Temp_hour);
+					Display_ASCII8X16(1,2,Temp);
 					while(!Key3);
 				}
 			}
@@ -96,9 +104,10 @@ void Keyinit()//按一次k1调节秒，再按一次调节分钟，再按一次调节小时，再按一次调节
 					{
 						Temp_min = 30;
 					}
-					Dsp_arc_area();
-					Display_ASCII8X16(24,5,&Temp_min);
-				}
+					Lcd_arc_clear(MIN);
+					memset(Temp,' ',sizeof(Temp));
+					sprintf(Temp,"%02d",Temp_min);
+					Display_ASCII8X16(50,2,Temp);				}
 			}
 			if(Key3 == 0)
 			{
@@ -110,9 +119,10 @@ void Keyinit()//按一次k1调节秒，再按一次调节分钟，再按一次调节小时，再按一次调节
 						{
 							Temp_min = 0;
 						}
-						Dsp_arc_area();
-						Display_ASCII8X16(24,5,&Temp_min);
-					}
+						Lcd_arc_clear(MIN);
+						memset(Temp,' ',sizeof(Temp));
+						sprintf(Temp,"%02d",Temp_min);
+						Display_ASCII8X16(50,2,Temp);				}
 			}
 		}
 		while(!Key1);
@@ -132,9 +142,10 @@ void Keyinit()//按一次k1调节秒，再按一次调节分钟，再按一次调节小时，再按一次调节
 					{
 						Temp_sec = 30;
 					}
-					Dsp_arc_area();
-					Display_ASCII8X16(46,5,&Temp_sec);
-				}
+					Lcd_arc_clear(SEC);
+					memset(Temp,' ',sizeof(Temp));
+					sprintf(Temp,"%02d",Temp_sec);
+					Display_ASCII8X16(102,2,Temp);				}
 			}
 			if(Key3 == 0)
 			{
@@ -146,9 +157,10 @@ void Keyinit()//按一次k1调节秒，再按一次调节分钟，再按一次调节小时，再按一次调节
 						{
 							Temp_sec = 0;
 						}
-						Dsp_arc_area();
-						Display_ASCII8X16(46,5,&Temp_sec);
-					}
+					Lcd_arc_clear(SEC);
+					memset(Temp,' ',sizeof(Temp));
+					sprintf(Temp,"%02d",Temp_sec);
+					Display_ASCII8X16(102,2,Temp);			}
 			}
 		}
 		while(!Key1);
@@ -168,8 +180,10 @@ void Keyinit()//按一次k1调节秒，再按一次调节分钟，再按一次调节小时，再按一次调节
 					{
 						Temp_year = 20;
 					}
-					Dsp_arc_area();
-					Display_ASCII8X16(50,20,&Temp_year);
+					Lcd_arc_clear(YEAR);
+					memset(Temp,' ',sizeof(Temp));
+					sprintf(Temp,"%02d",Temp_year);
+					Display_ASCII8X16(18,40,Temp);
 				}
 			}
 			if(Key3 == 0)
@@ -182,8 +196,10 @@ void Keyinit()//按一次k1调节秒，再按一次调节分钟，再按一次调节小时，再按一次调节
 						{
 							Temp_year = 20;
 						}
-						Dsp_arc_area();
-						Display_ASCII8X16(50,20,&Temp_year);
+					Lcd_arc_clear(YEAR);
+					memset(Temp,' ',sizeof(Temp));
+					sprintf(Temp,"%02d",Temp_year);
+					Display_ASCII8X16(18,40,Temp);
 					}
 			}
 		}
@@ -200,13 +216,15 @@ void Keyinit()//按一次k1调节秒，再按一次调节分钟，再按一次调节小时，再按一次调节
 					Delayms(10);
 					if(Key2 ==0)
 					{
-						Temp_mouth++;
-						if(Temp_mouth == 13)
+						Temp_month++;
+						if(Temp_month == 13)
 						{
-							Temp_mouth = 6;
+							Temp_month = 6;
 						}
-						Dsp_arc_area();
-						Display_ASCII8X16(50,20,&Temp_mouth);
+					Lcd_arc_clear(MONTH);
+					memset(Temp,' ',sizeof(Temp));
+					sprintf(Temp,"%02d",Temp_month);
+					Display_ASCII8X16(50,40,Temp);
 					}
 				}
 				if(Key3 == 0)
@@ -214,13 +232,15 @@ void Keyinit()//按一次k1调节秒，再按一次调节分钟，再按一次调节小时，再按一次调节
 						Delayms(10);
 						if(Key3 == 0)
 						{
-							Temp_mouth--;
-							if(Temp_mouth == (-1))
+							Temp_month--;
+							if(Temp_month == (-1))
 							{
-								Temp_mouth = 6;
+								Temp_month = 6;
 							}
-							Dsp_arc_area();
-							Display_ASCII8X16(50,20,&Temp_mouth);
+						Lcd_arc_clear(MONTH);
+						memset(Temp,' ',sizeof(Temp));
+						sprintf(Temp,"%02d",Temp_month);
+						Display_ASCII8X16(50,40,Temp);
 						}
 				}
 			}
@@ -241,8 +261,10 @@ void Keyinit()//按一次k1调节秒，再按一次调节分钟，再按一次调节小时，再按一次调节
 						{
 							Temp_date = 15;
 						}
-						Dsp_arc_area();
-						Display_ASCII8X16(67,20,&Temp_date);
+					Lcd_arc_clear(DATE);
+					memset(Temp,' ',sizeof(Temp));
+					sprintf(Temp,"%02d",Temp_date);
+					Display_ASCII8X16(90,40,Temp);
 					}
 				}
 				if(Key3 == 0)
@@ -255,8 +277,10 @@ void Keyinit()//按一次k1调节秒，再按一次调节分钟，再按一次调节小时，再按一次调节
 							{
 								Temp_date = 15;
 							}
-							Dsp_arc_area();
-							Display_ASCII8X16(67,20,&Temp_date);
+					Lcd_arc_clear(DATE);
+					memset(Temp,' ',sizeof(Temp));
+					sprintf(Temp,"%02d",Temp_date);
+					Display_ASCII8X16(90,40,Temp);
 						}
 				}
 			}
@@ -269,7 +293,7 @@ void Keyinit()//按一次k1调节秒，再按一次调节分钟，再按一次调节小时，再按一次调节
 			TIME[1] = (unsigned char)Temp_min;
 			TIME[2] = (unsigned char)Temp_hour;
 			TIME[3] = (unsigned char)Temp_date;
-			TIME[4] = (unsigned char)Temp_mouth;
+			TIME[4] = (unsigned char)Temp_month;
 			TIME[6] = (unsigned char)Temp_year;
 			DS_Init();
 		}

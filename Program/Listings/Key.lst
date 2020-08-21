@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   KEY                                                               08/18/2020 09:37:14 PAGE 1   
+C51 COMPILER V9.59.0.0   KEY                                                               08/21/2020 17:23:52 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE KEY
@@ -14,312 +14,336 @@ line level    source
    4          #include "Led.h"
    5          #include "Lcd.h"
    6          #include "DS1302.h"
-   7          sbit Key1 = P2^4;
-   8          sbit Key2 = P2^5;
-   9          sbit Key3 = P5^4;
-  10          unsigned char counter1 = 0;
-  11          unsigned char counter2 = 0;
-  12          unsigned char counter3 = 0;
-  13          extern unsigned char TIME[7];
-  14          void Keyinit_1()
-  15          {
-  16   1        if(!Key1)
-  17   1        {
-  18   2          Delayms(10);
-  19   2          if (!Key1)
-  20   2          {     
-  21   3            counter1 = 1;
-  22   3            while(!Key1);
-  23   3          }
-  24   2        }
-  25   1      }
-  26          void Keyinit_2()
-  27          {
-  28   1        if(!Key2)
-  29   1        {
-  30   2          Delayms(10);
-  31   2          if (!Key2)
-  32   2          {
-  33   3          
-  34   3            while(!Key2);
-  35   3          }
-  36   2        }
-  37   1      }
-  38          void Keyinit()//°´Ò»´Îk1µ÷½ÚÃë£¬ÔÙ°´Ò»´Îµ÷½Ú·ÖÖÓ£¬ÔÙ°´Ò»´Îµ÷½ÚÐ¡Ê±£¬ÔÙ°´Ò»´Îµ÷½ÚÈÕ  //ÔÙ°´Ò»´Îµ÷½ÚÔÂ£¬ÔÙ°´Ò
+   7          #include "stdio.h"
+   8          #include "string.h"
+   9          sbit Key1 = P2^4;
+  10          sbit Key2 = P2^5;
+  11          sbit Key3 = P5^4;
+  12          unsigned char counter1 = 0;
+  13          unsigned char counter2 = 0;
+  14          unsigned char counter3 = 0;
+  15          int Temp_hour = 8;
+  16          int Temp_min = 0;
+  17          int Temp_sec = 0;
+  18          int Temp_year = 20;
+  19          int Temp_month = 6;
+  20          int Temp_date = 15;
+  21          extern unsigned char TIME[7];
+  22          void Keyinit_1()
+  23          {
+  24   1        if(!Key1)
+  25   1        {
+  26   2          Delayms(10);
+  27   2          if (!Key1)
+  28   2          {     
+  29   3            
+  30   3            counter1 = 1;
+  31   3            while(!Key1);
+  32   3          }
+  33   2        }
+  34   1      }
+  35          void Keyinit_2()
+  36          {
+  37   1        if(!Key2)
+  38   1        {
+  39   2          Delayms(10);
+  40   2          if (!Key2)
+  41   2          {
+  42   3          
+  43   3            while(!Key2);
+  44   3          }
+  45   2        }
+  46   1      }
+  47          void Keyinit()//°´Ò»´Îk1µ÷½ÚÃë£¬ÔÙ°´Ò»´Îµ÷½Ú·ÖÖÓ£¬ÔÙ°´Ò»´Îµ÷½ÚÐ¡Ê±£¬ÔÙ°´Ò»´Îµ÷½ÚÈÕ  //ÔÙ°´Ò»´Îµ÷½ÚÔÂ£¬ÔÙ°´Ò
              -»´Îµ÷½ÚÄê£¬×îºó°´Ò»´ÎÈ·ÈÏÊý×Ö£¬ÆäÖÐ£¬Key2Ã¿´Î¼õÒ»£¬Key3Ã¿´Î¼ÓÒ»£»         
-  39          { 
-  40   1        char Temp_hour = 8;
-  41   1        char Temp_min = 0;
-  42   1        char Temp_sec = 0;
-  43   1        char Temp_year = 20;
-  44   1        char Temp_mouth = 6;
-  45   1        char Temp_date = 15;
-  46   1        Keyinit_1();
-  47   1        if(counter1 == 1)
-  48   1        {
-  49   2          while(Key1)
-  50   2          {
-  51   3            if(Key2 == 0)
-  52   3            {
-  53   4              Delayms(10);
-C51 COMPILER V9.59.0.0   KEY                                                               08/18/2020 09:37:14 PAGE 2   
+  48          { 
+  49   1        char Temp[10];
+  50   1        Keyinit_1();
+  51   1        if(counter1 == 1)
+  52   1        {
+  53   2          while(Key1)
+C51 COMPILER V9.59.0.0   KEY                                                               08/21/2020 17:23:52 PAGE 2   
 
-  54   4              if(Key2 == 0)
-  55   4              {
-  56   5                Temp_hour++;
-  57   5                if(Temp_hour == 25)
-  58   5                {
-  59   6                  Temp_hour = 8;      
-  60   6                }
-  61   5                Dsp_arc_area();
-  62   5                Display_ASCII8X16(2,5,&Temp_hour);
-  63   5                while(!Key2);         
-  64   5              }     
-  65   4            }
-  66   3            if(Key3 == 0)
-  67   3            {
-  68   4              Delayms(10);
-  69   4              if(Key3 == 0)
-  70   4              {
-  71   5                Temp_hour--;
-  72   5                if(Temp_hour == (-1))
-  73   5                {
-  74   6                  Temp_hour = 8;
-  75   6                }
-  76   5                Dsp_arc_area();
-  77   5                Display_ASCII8X16(2,5,&Temp_hour);
-  78   5                while(!Key3);
-  79   5              }
-  80   4            }
-  81   3          }
-  82   2          while(!Key1);
-  83   2          counter1 = 2;
-  84   2        }
-  85   1        if(counter1 == 2)
-  86   1        {
-  87   2          while(Key1)
-  88   2          {
-  89   3            if(Key2 == 0)
-  90   3            {
-  91   4              Delayms(10);
-  92   4              if(Key2 ==0)
-  93   4              {
-  94   5                Temp_min++;
-  95   5                if(Temp_min == 61)
-  96   5                {
-  97   6                  Temp_min = 30;
-  98   6                }
-  99   5                Dsp_arc_area();
- 100   5                Display_ASCII8X16(24,5,&Temp_min);
- 101   5              }
- 102   4            }
- 103   3            if(Key3 == 0)
- 104   3            {
- 105   4                Delayms(10);
- 106   4                if(Key3 == 0)
- 107   4                {
- 108   5                  Temp_min--;
- 109   5                  if(Temp_min == (-1))
- 110   5                  {
- 111   6                    Temp_min = 0;
- 112   6                  }
- 113   5                  Dsp_arc_area();
- 114   5                  Display_ASCII8X16(24,5,&Temp_min);
- 115   5                }
-C51 COMPILER V9.59.0.0   KEY                                                               08/18/2020 09:37:14 PAGE 3   
+  54   2          {
+  55   3            if(Key2 == 0)
+  56   3            {
+  57   4              Delayms(10);
+  58   4              if(Key2 == 0)
+  59   4              {
+  60   5                Temp_hour++;
+  61   5                if(Temp_hour == 25)
+  62   5                {
+  63   6                  Temp_hour = 8;      
+  64   6                }
+  65   5                Lcd_arc_clear(HOUR);
+  66   5                memset(Temp,' ',sizeof(Temp));
+  67   5                sprintf(Temp,"%02d",Temp_hour);
+  68   5                Display_ASCII8X16(1,2,Temp);
+  69   5                while(!Key2);         
+  70   5              }     
+  71   4            }
+  72   3            if(Key3 == 0)
+  73   3            {
+  74   4              Delayms(10);
+  75   4              if(Key3 == 0)
+  76   4              {
+  77   5                Temp_hour--;
+  78   5                if(Temp_hour == (-1))
+  79   5                {
+  80   6                  Temp_hour = 8;
+  81   6                }
+  82   5                Lcd_arc_clear(HOUR);
+  83   5                memset(Temp,' ',sizeof(Temp));
+  84   5                sprintf(Temp,"%02d",Temp_hour);
+  85   5                Display_ASCII8X16(1,2,Temp);
+  86   5                while(!Key3);
+  87   5              }
+  88   4            }
+  89   3          }
+  90   2          while(!Key1);
+  91   2          counter1 = 2;
+  92   2        }
+  93   1        if(counter1 == 2)
+  94   1        {
+  95   2          while(Key1)
+  96   2          {
+  97   3            if(Key2 == 0)
+  98   3            {
+  99   4              Delayms(10);
+ 100   4              if(Key2 ==0)
+ 101   4              {
+ 102   5                Temp_min++;
+ 103   5                if(Temp_min == 61)
+ 104   5                {
+ 105   6                  Temp_min = 30;
+ 106   6                }
+ 107   5                Lcd_arc_clear(MIN);
+ 108   5                memset(Temp,' ',sizeof(Temp));
+ 109   5                sprintf(Temp,"%02d",Temp_min);
+ 110   5                Display_ASCII8X16(50,2,Temp);       }
+ 111   4            }
+ 112   3            if(Key3 == 0)
+ 113   3            {
+ 114   4                Delayms(10);
+ 115   4                if(Key3 == 0)
+C51 COMPILER V9.59.0.0   KEY                                                               08/21/2020 17:23:52 PAGE 3   
 
- 116   4            }
- 117   3          }
- 118   2          while(!Key1);
- 119   2          counter1 = 3;
- 120   2        }
- 121   1        if(counter1 == 3)
- 122   1        {
- 123   2          while(Key1)
- 124   2          {
- 125   3            if(Key2 == 0)
- 126   3            {
- 127   4              Delayms(10);
- 128   4              if(Key2 ==0)
- 129   4              {
- 130   5                Temp_sec++;
- 131   5                if(Temp_sec == 61)
- 132   5                {
- 133   6                  Temp_sec = 30;
- 134   6                }
- 135   5                Dsp_arc_area();
- 136   5                Display_ASCII8X16(46,5,&Temp_sec);
- 137   5              }
- 138   4            }
- 139   3            if(Key3 == 0)
- 140   3            {
- 141   4                Delayms(10);
- 142   4                if(Key3 == 0)
- 143   4                {
- 144   5                  Temp_sec--;
- 145   5                  if(Temp_sec == (-1))
- 146   5                  {
- 147   6                    Temp_sec = 0;
- 148   6                  }
- 149   5                  Dsp_arc_area();
- 150   5                  Display_ASCII8X16(46,5,&Temp_sec);
- 151   5                }
- 152   4            }
- 153   3          }
- 154   2          while(!Key1);
- 155   2          counter1 = 4;
- 156   2        }
- 157   1        if(counter1 == 4)
- 158   1        {
- 159   2          while(Key1)
- 160   2          {
- 161   3            if(Key2 == 0)
- 162   3            {
- 163   4              Delayms(10);
- 164   4              if(Key2 ==0)
- 165   4              {
- 166   5                Temp_year++;
- 167   5                if(Temp_year == 100)
- 168   5                {
- 169   6                  Temp_year = 20;
- 170   6                }
- 171   5                Dsp_arc_area();
- 172   5                Display_ASCII8X16(50,20,&Temp_year);
- 173   5              }
- 174   4            }
- 175   3            if(Key3 == 0)
- 176   3            {
- 177   4                Delayms(10);
-C51 COMPILER V9.59.0.0   KEY                                                               08/18/2020 09:37:14 PAGE 4   
+ 116   4                {
+ 117   5                  Temp_min--;
+ 118   5                  if(Temp_min == (-1))
+ 119   5                  {
+ 120   6                    Temp_min = 0;
+ 121   6                  }
+ 122   5                  Lcd_arc_clear(MIN);
+ 123   5                  memset(Temp,' ',sizeof(Temp));
+ 124   5                  sprintf(Temp,"%02d",Temp_min);
+ 125   5                  Display_ASCII8X16(50,2,Temp);       }
+ 126   4            }
+ 127   3          }
+ 128   2          while(!Key1);
+ 129   2          counter1 = 3;
+ 130   2        }
+ 131   1        if(counter1 == 3)
+ 132   1        {
+ 133   2          while(Key1)
+ 134   2          {
+ 135   3            if(Key2 == 0)
+ 136   3            {
+ 137   4              Delayms(10);
+ 138   4              if(Key2 ==0)
+ 139   4              {
+ 140   5                Temp_sec++;
+ 141   5                if(Temp_sec == 61)
+ 142   5                {
+ 143   6                  Temp_sec = 30;
+ 144   6                }
+ 145   5                Lcd_arc_clear(SEC);
+ 146   5                memset(Temp,' ',sizeof(Temp));
+ 147   5                sprintf(Temp,"%02d",Temp_sec);
+ 148   5                Display_ASCII8X16(102,2,Temp);        }
+ 149   4            }
+ 150   3            if(Key3 == 0)
+ 151   3            {
+ 152   4                Delayms(10);
+ 153   4                if(Key3 == 0)
+ 154   4                {
+ 155   5                  Temp_sec--;
+ 156   5                  if(Temp_sec == (-1))
+ 157   5                  {
+ 158   6                    Temp_sec = 0;
+ 159   6                  }
+ 160   5                Lcd_arc_clear(SEC);
+ 161   5                memset(Temp,' ',sizeof(Temp));
+ 162   5                sprintf(Temp,"%02d",Temp_sec);
+ 163   5                Display_ASCII8X16(102,2,Temp);      }
+ 164   4            }
+ 165   3          }
+ 166   2          while(!Key1);
+ 167   2          counter1 = 4;
+ 168   2        }
+ 169   1        if(counter1 == 4)
+ 170   1        {
+ 171   2          while(Key1)
+ 172   2          {
+ 173   3            if(Key2 == 0)
+ 174   3            {
+ 175   4              Delayms(10);
+ 176   4              if(Key2 ==0)
+ 177   4              {
+C51 COMPILER V9.59.0.0   KEY                                                               08/21/2020 17:23:52 PAGE 4   
 
- 178   4                if(Key3 == 0)
- 179   4                {
- 180   5                  Temp_year--;
- 181   5                  if(Temp_year == (-1))
- 182   5                  {
- 183   6                    Temp_year = 20;
- 184   6                  }
- 185   5                  Dsp_arc_area();
- 186   5                  Display_ASCII8X16(50,20,&Temp_year);
- 187   5                }
+ 178   5                Temp_year++;
+ 179   5                if(Temp_year == 100)
+ 180   5                {
+ 181   6                  Temp_year = 20;
+ 182   6                }
+ 183   5                Lcd_arc_clear(YEAR);
+ 184   5                memset(Temp,' ',sizeof(Temp));
+ 185   5                sprintf(Temp,"%02d",Temp_year);
+ 186   5                Display_ASCII8X16(18,40,Temp);
+ 187   5              }
  188   4            }
- 189   3          }
- 190   2          while(!Key1);
- 191   2          counter1 = 5;
- 192   2        }
- 193   1          
- 194   1          if(counter1 == 5)
- 195   1          {
- 196   2            while(Key1)
- 197   2            {
- 198   3              if(Key2 == 0)
- 199   3              {
- 200   4                Delayms(10);
- 201   4                if(Key2 ==0)
- 202   4                {
- 203   5                  Temp_mouth++;
- 204   5                  if(Temp_mouth == 13)
- 205   5                  {
- 206   6                    Temp_mouth = 6;
- 207   6                  }
- 208   5                  Dsp_arc_area();
- 209   5                  Display_ASCII8X16(50,20,&Temp_mouth);
- 210   5                }
- 211   4              }
- 212   3              if(Key3 == 0)
- 213   3              {
- 214   4                  Delayms(10);
- 215   4                  if(Key3 == 0)
- 216   4                  {
- 217   5                    Temp_mouth--;
- 218   5                    if(Temp_mouth == (-1))
- 219   5                    {
- 220   6                      Temp_mouth = 6;
- 221   6                    }
- 222   5                    Dsp_arc_area();
- 223   5                    Display_ASCII8X16(50,20,&Temp_mouth);
- 224   5                  }
- 225   4              }
- 226   3            }
- 227   2            while(!Key1);
- 228   2            counter1 = 6;
- 229   2          }
- 230   1          if(counter1 == 6)
- 231   1          {
- 232   2            while(Key1)
- 233   2            {
- 234   3              if(Key2 == 0)
- 235   3              {
- 236   4                Delayms(10);
- 237   4                if(Key2 ==0)
- 238   4                {
- 239   5                  Temp_date++;
-C51 COMPILER V9.59.0.0   KEY                                                               08/18/2020 09:37:14 PAGE 5   
+ 189   3            if(Key3 == 0)
+ 190   3            {
+ 191   4                Delayms(10);
+ 192   4                if(Key3 == 0)
+ 193   4                {
+ 194   5                  Temp_year--;
+ 195   5                  if(Temp_year == (-1))
+ 196   5                  {
+ 197   6                    Temp_year = 20;
+ 198   6                  }
+ 199   5                Lcd_arc_clear(YEAR);
+ 200   5                memset(Temp,' ',sizeof(Temp));
+ 201   5                sprintf(Temp,"%02d",Temp_year);
+ 202   5                Display_ASCII8X16(18,40,Temp);
+ 203   5                }
+ 204   4            }
+ 205   3          }
+ 206   2          while(!Key1);
+ 207   2          counter1 = 5;
+ 208   2        }
+ 209   1          
+ 210   1          if(counter1 == 5)
+ 211   1          {
+ 212   2            while(Key1)
+ 213   2            {
+ 214   3              if(Key2 == 0)
+ 215   3              {
+ 216   4                Delayms(10);
+ 217   4                if(Key2 ==0)
+ 218   4                {
+ 219   5                  Temp_month++;
+ 220   5                  if(Temp_month == 13)
+ 221   5                  {
+ 222   6                    Temp_month = 6;
+ 223   6                  }
+ 224   5                Lcd_arc_clear(MONTH);
+ 225   5                memset(Temp,' ',sizeof(Temp));
+ 226   5                sprintf(Temp,"%02d",Temp_month);
+ 227   5                Display_ASCII8X16(50,40,Temp);
+ 228   5                }
+ 229   4              }
+ 230   3              if(Key3 == 0)
+ 231   3              {
+ 232   4                  Delayms(10);
+ 233   4                  if(Key3 == 0)
+ 234   4                  {
+ 235   5                    Temp_month--;
+ 236   5                    if(Temp_month == (-1))
+ 237   5                    {
+ 238   6                      Temp_month = 6;
+ 239   6                    }
+C51 COMPILER V9.59.0.0   KEY                                                               08/21/2020 17:23:52 PAGE 5   
 
- 240   5                  if(Temp_date == 32)
- 241   5                  {
- 242   6                    Temp_date = 15;
- 243   6                  }
- 244   5                  Dsp_arc_area();
- 245   5                  Display_ASCII8X16(67,20,&Temp_date);
- 246   5                }
- 247   4              }
- 248   3              if(Key3 == 0)
- 249   3              {
- 250   4                  Delayms(10);
- 251   4                  if(Key3 == 0)
- 252   4                  {
- 253   5                    Temp_date--;
- 254   5                    if(Temp_date == (-1))
- 255   5                    {
- 256   6                      Temp_date = 15;
- 257   6                    }
- 258   5                    Dsp_arc_area();
- 259   5                    Display_ASCII8X16(67,20,&Temp_date);
- 260   5                  }
- 261   4              }
- 262   3            }
- 263   2            while(!Key1);
- 264   2            counter1 = 7;
- 265   2          }
- 266   1          if(counter1 == 7)
- 267   1          {
- 268   2            TIME[0] = (unsigned char)Temp_sec;
- 269   2            TIME[1] = (unsigned char)Temp_min;
- 270   2            TIME[2] = (unsigned char)Temp_hour;
- 271   2            TIME[3] = (unsigned char)Temp_date;
- 272   2            TIME[4] = (unsigned char)Temp_mouth;
- 273   2            TIME[6] = (unsigned char)Temp_year;
- 274   2            DS_Init();
- 275   2          }
- 276   1      }
- 277          //void KeyRST()
- 278          //{
- 279          //  if(!RST)
- 280          //  {
- 281          //    Delayms(10);
- 282          //    if(!RST)
- 283          //    {
- 284          //      IAP_CONTR |= 0x20;
- 285          //      Ledinit();
- 286          //    }
- 287          //    else
- 288          //    {
- 289          //      Led = 1;
- 290          //    }
- 291          //  }
- 292          //}
+ 240   5                  Lcd_arc_clear(MONTH);
+ 241   5                  memset(Temp,' ',sizeof(Temp));
+ 242   5                  sprintf(Temp,"%02d",Temp_month);
+ 243   5                  Display_ASCII8X16(50,40,Temp);
+ 244   5                  }
+ 245   4              }
+ 246   3            }
+ 247   2            while(!Key1);
+ 248   2            counter1 = 6;
+ 249   2          }
+ 250   1          if(counter1 == 6)
+ 251   1          {
+ 252   2            while(Key1)
+ 253   2            {
+ 254   3              if(Key2 == 0)
+ 255   3              {
+ 256   4                Delayms(10);
+ 257   4                if(Key2 ==0)
+ 258   4                {
+ 259   5                  Temp_date++;
+ 260   5                  if(Temp_date == 32)
+ 261   5                  {
+ 262   6                    Temp_date = 15;
+ 263   6                  }
+ 264   5                Lcd_arc_clear(DATE);
+ 265   5                memset(Temp,' ',sizeof(Temp));
+ 266   5                sprintf(Temp,"%02d",Temp_date);
+ 267   5                Display_ASCII8X16(90,40,Temp);
+ 268   5                }
+ 269   4              }
+ 270   3              if(Key3 == 0)
+ 271   3              {
+ 272   4                  Delayms(10);
+ 273   4                  if(Key3 == 0)
+ 274   4                  {
+ 275   5                    Temp_date--;
+ 276   5                    if(Temp_date == (-1))
+ 277   5                    {
+ 278   6                      Temp_date = 15;
+ 279   6                    }
+ 280   5                Lcd_arc_clear(DATE);
+ 281   5                memset(Temp,' ',sizeof(Temp));
+ 282   5                sprintf(Temp,"%02d",Temp_date);
+ 283   5                Display_ASCII8X16(90,40,Temp);
+ 284   5                  }
+ 285   4              }
+ 286   3            }
+ 287   2            while(!Key1);
+ 288   2            counter1 = 7;
+ 289   2          }
+ 290   1          if(counter1 == 7)
+ 291   1          {
+ 292   2            TIME[0] = (unsigned char)Temp_sec;
+ 293   2            TIME[1] = (unsigned char)Temp_min;
+ 294   2            TIME[2] = (unsigned char)Temp_hour;
+ 295   2            TIME[3] = (unsigned char)Temp_date;
+ 296   2            TIME[4] = (unsigned char)Temp_month;
+ 297   2            TIME[6] = (unsigned char)Temp_year;
+ 298   2            DS_Init();
+ 299   2          }
+ 300   1      }
+ 301          //void KeyRST()
+C51 COMPILER V9.59.0.0   KEY                                                               08/21/2020 17:23:52 PAGE 6   
+
+ 302          //{
+ 303          //  if(!RST)
+ 304          //  {
+ 305          //    Delayms(10);
+ 306          //    if(!RST)
+ 307          //    {
+ 308          //      IAP_CONTR |= 0x20;
+ 309          //      Ledinit();
+ 310          //    }
+ 311          //    else
+ 312          //    {
+ 313          //      Led = 1;
+ 314          //    }
+ 315          //  }
+ 316          //}
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    912    ----
-   CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =      3       6
+   CODE SIZE        =   1745    ----
+   CONSTANT SIZE    =      5    ----
+   XDATA SIZE       =     15      10
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
-C51 COMPILER V9.59.0.0   KEY                                                               08/18/2020 09:37:14 PAGE 6   
-
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.
 

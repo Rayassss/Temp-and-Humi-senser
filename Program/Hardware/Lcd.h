@@ -9,6 +9,12 @@
 #define GRAY0   0xEF7D   
 #define GRAY1   0x8410      	
 #define GRAY2   0x4208 
+#define HOUR 1
+#define MIN 2
+#define SEC 3
+#define YEAR 4
+#define MONTH 5
+#define DATE 6
 void delay(unsigned int time);
 void  SPI_WriteData(unsigned char Data);
 void  Lcd_WriteIndex(unsigned char Data);
@@ -22,8 +28,7 @@ void dsp_single_colour(int color);
 void Display_ASCII8X16(unsigned int x0,unsigned int y0,unsigned char *s);
 void LCD_Clear(unsigned int Color);
 void Display_Desc();
-void go_Lcd();
 void Lcd_showchar(unsigned char x,unsigned char y,int bgcolor,int Fontcolor);
-void Dsp_arc_area();
-void Display_Num(unsigned char x,unsigned int  y,unsigned char *str,unsigned int dcolor,unsigned int bgcolor);
+void Display_Num(unsigned char x,unsigned char y,unsigned char *str);
+void Lcd_arc_clear(unsigned char index);
 #endif

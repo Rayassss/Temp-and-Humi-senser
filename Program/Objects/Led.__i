@@ -1,0 +1,1 @@
+"Hardware\Led.c" LARGE ROM(COMPACT) OPTIMIZE (8,SPEED) BROWSE INCDIR(.\User;.\System;.\App;.\Hardware;.\System;.\User) DEBUG OBJECTEXTEND PRINT(.\Listings\Led.lst) TABS (2) OBJECT(.\Objects\Led.obj)

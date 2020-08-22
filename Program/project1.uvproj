@@ -474,7 +474,7 @@
                   <MiscControls></MiscControls>
                   <Define></Define>
                   <Undefine></Undefine>
-                  <IncludePath>.\User;.\System</IncludePath>
+                  <IncludePath>.\User;.\System;.\App</IncludePath>
                 </VariousControls>
               </C51>
               <Ax51>

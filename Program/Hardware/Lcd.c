@@ -324,6 +324,18 @@ void LCD_Clear(unsigned int Color)
 		}
 	}
 }
+void Lcd_half_clear()
+{
+	unsigned char i,j;
+	Lcd_SetRegion(0,0,127,70,2);
+	for (i=0;i<70;i++)
+	{
+    	for (j=0;j<128;j++)
+		{
+        	Lcd_WriteData_16(WHITE);
+		}
+	}
+}
 void Lcd_arc_clear(unsigned char index)
 {
 	unsigned char i,j;

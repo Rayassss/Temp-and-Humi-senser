@@ -31,4 +31,6 @@ void Display_Desc();
 void Lcd_showchar(unsigned char x,unsigned char y,int bgcolor,int Fontcolor);
 void Display_Num(unsigned char x,unsigned char y,unsigned char *str);
 void Lcd_arc_clear(unsigned char index);
+void Lcd_half_clear();
+
 #endif

@@ -11,23 +11,21 @@ unsigned char TIME[7] = {0x00,0x30,0x12,0x15,0x06,0x05,0x20};//sec,min,hour,date
 extern unsigned char READTIME[7];
 void main()
 {
-	int a = 0x0010;
-	TIME[0] = (unsigned char)a;
 	Uart1_Init();
-//	DS_ReadTime();
-//	if(((READTIME[0] & 0x80) >> 7) == 1)
-//	{
+	DS_ReadTime();
+	if(((READTIME[0] & 0x80) >> 7) == 1)
+	{
 		DS_Init(TIME);
-//	}
+	}
 	lcd_initial();
 	Lcd_half_clear();
 	Draw_DS1302();
 //	Delay2000ms();
 //	Draw_DHT11();
-	while(1);
-//	{	
-//		Keyinit();
-//	}
+	while(1)
+	{	
+		Keyinit();
+	}
 	
 }
 void UART1_Isr() interrupt 4

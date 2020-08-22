@@ -10,7 +10,6 @@
 sbit Key1 = P2^4;//左
 sbit Key2 = P2^5;
 sbit Key3 = P5^4;//右
-extern unsigned char TIME[7];
 void Keyinit_1()
 {
 
@@ -38,7 +37,7 @@ void Keyinit()//按一次k1调节秒，再按一次调节分钟，再按一次调节小时，再按一次调节
 	int Temp_year = 20;
 	int Temp_month = 6;
 	int Temp_date = 15;
-	char Temp[10];
+	char Temp[5];
 	unsigned char Writetime[7];
 	bit flag;
 	if(!Key1)
@@ -330,12 +329,12 @@ if(counter1 == 4)
 	}
 	if(counter1 == 7)
 	{
-		Writetime[0] = (unsigned char)Temp_sec;
-		Writetime[1] = (unsigned char)Temp_min;
-		Writetime[2] = (unsigned char)Temp_hour;
-		Writetime[3] = (unsigned char)Temp_date;
-		Writetime[4] = (unsigned char)Temp_month;
-		Writetime[6] = (unsigned char)Temp_year;
+		Writetime[0] = Hex_to_BCD((unsigned char)Temp_sec);
+		Writetime[1] = Hex_to_BCD((unsigned char)Temp_min);
+		Writetime[2] = Hex_to_BCD((unsigned char)Temp_hour);
+		Writetime[3] = Hex_to_BCD((unsigned char)Temp_date);
+		Writetime[4] = Hex_to_BCD((unsigned char)Temp_month);
+		Writetime[6] = Hex_to_BCD((unsigned char)Temp_year);
 		DS_Init(Writetime);
 		Lcd_half_clear();
 		Draw_DS1302();

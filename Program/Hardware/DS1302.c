@@ -2,6 +2,8 @@
 #include "Delay.h"
 #include "DS1302.h"
 #include "intrins.h"
+#include "stdio.h"
+#include "string.h"
 sbit SCLK = P4^5; 
 sbit IO = P4^6;
 sbit RST = P4^7;
@@ -83,8 +85,13 @@ void DS_Init(unsigned char Table[])
 void DS_ReadTime()
 {
 	unsigned char n;
+	memset(READTIME,' ',sizeof(READTIME));
 	for (n=0; n<7; n++)//读取7个字节的时钟信号：分秒时日月周年
 	{
 		READTIME[n] = DS_ReadByte(READ_RTC_ADDR[n]);
 	}
+}
+unsigned char Hex_to_BCD(unsigned char hexcode)
+{
+	return( ( hexcode % 10 ) + ( hexcode / 10 * 16 ) );
 }

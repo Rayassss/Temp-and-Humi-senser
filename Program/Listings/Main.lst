@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   MAIN                                                              08/22/2020 11:31:26 PAGE 1   
+C51 COMPILER V9.59.0.0   MAIN                                                              08/22/2020 16:11:54 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
@@ -21,57 +21,55 @@ line level    source
   11          extern unsigned char READTIME[7];
   12          void main()
   13          {
-  14   1        int a = 0x0010;
-  15   1        TIME[0] = (unsigned char)a;
-  16   1        Uart1_Init();
-  17   1      //  DS_ReadTime();
-  18   1      //  if(((READTIME[0] & 0x80) >> 7) == 1)
-  19   1      //  {
-  20   1          DS_Init(TIME);
-  21   1      //  }
-  22   1        lcd_initial();
-  23   1        Lcd_half_clear();
-  24   1        Draw_DS1302();
-  25   1      //  Delay2000ms();
-  26   1      //  Draw_DHT11();
-  27   1        while(1);
-  28   1      //  { 
-  29   1      //    Keyinit();
-  30   1      //  }
-  31   1        
-  32   1      }
-  33          void UART1_Isr() interrupt 4
-  34          {
-  35   1        
-  36   1        
-  37   1        //---免掉点下载，波特率默认57600bps--------
-  38   1        static unsigned char uart_ser = 0;
-  39   1        if(TI==1)   
-  40   1        {
-  41   2          TI=0;
-  42   2        }
-  43   1        RI = 0;
-  44   1        if(SBUF == 0x7f)
-  45   1        {
-  46   2          uart_ser++;
-  47   2          if(uart_ser == 10)
-  48   2          {
-  49   3            uart_ser = 0;
-  50   3            IAP_CONTR |= 0x60;
-  51   3          }
-  52   2        }
-  53   1        else
-  54   1        {
-C51 COMPILER V9.59.0.0   MAIN                                                              08/22/2020 11:31:26 PAGE 2   
+  14   1        Uart1_Init();
+  15   1        DS_ReadTime();
+  16   1        if(((READTIME[0] & 0x80) >> 7) == 1)
+  17   1        {
+  18   2          DS_Init(TIME);
+  19   2        }
+  20   1        lcd_initial();
+  21   1        Lcd_half_clear();
+  22   1        Draw_DS1302();
+  23   1      //  Delay2000ms();
+  24   1      //  Draw_DHT11();
+  25   1        while(1)
+  26   1        { 
+  27   2          Keyinit();
+  28   2        }
+  29   1        
+  30   1      }
+  31          void UART1_Isr() interrupt 4
+  32          {
+  33   1        
+  34   1        
+  35   1        //---免掉点下载，波特率默认57600bps--------
+  36   1        static unsigned char uart_ser = 0;
+  37   1        if(TI==1)   
+  38   1        {
+  39   2          TI=0;
+  40   2        }
+  41   1        RI = 0;
+  42   1        if(SBUF == 0x7f)
+  43   1        {
+  44   2          uart_ser++;
+  45   2          if(uart_ser == 10)
+  46   2          {
+  47   3            uart_ser = 0;
+  48   3            IAP_CONTR |= 0x60;
+  49   3          }
+  50   2        }
+  51   1        else
+  52   1        {
+  53   2          uart_ser = 0;
+  54   2        }   
+C51 COMPILER V9.59.0.0   MAIN                                                              08/22/2020 16:11:54 PAGE 2   
 
-  55   2          uart_ser = 0;
-  56   2        }   
-  57   1        //-----------------------------------------
-  58   1      }
+  55   1        //-----------------------------------------
+  56   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =     91    ----
+   CODE SIZE        =    106    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =      8    ----
    PDATA SIZE       =   ----    ----

@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   MAIN                                                              08/22/2020 16:11:54 PAGE 1   
+C51 COMPILER V9.59.0.0   MAIN                                                              08/23/2020 10:36:32 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
@@ -17,61 +17,76 @@ line level    source
    7          #include "GUI.h"
    8          #include "Led.h"
    9          #include "Key.h"
-  10          unsigned char TIME[7] = {0x00,0x30,0x12,0x15,0x06,0x05,0x20};//sec,min,hour,date,month,day,year
-  11          extern unsigned char READTIME[7];
-  12          void main()
-  13          {
-  14   1        Uart1_Init();
-  15   1        DS_ReadTime();
-  16   1        if(((READTIME[0] & 0x80) >> 7) == 1)
-  17   1        {
-  18   2          DS_Init(TIME);
-  19   2        }
-  20   1        lcd_initial();
-  21   1        Lcd_half_clear();
-  22   1        Draw_DS1302();
-  23   1      //  Delay2000ms();
-  24   1      //  Draw_DHT11();
-  25   1        while(1)
-  26   1        { 
-  27   2          Keyinit();
-  28   2        }
-  29   1        
-  30   1      }
-  31          void UART1_Isr() interrupt 4
-  32          {
-  33   1        
+  10          #include "intrins.h"
+  11          unsigned char TIME[7] = {0x00,0x30,0x12,0x15,0x06,0x05,0x20};//sec,min,hour,date,month,day,year
+  12          extern unsigned char READTIME[7];
+  13          unsigned char i = 0;
+  14          void main()
+  15          {
+  16   1        Uart1_Init();
+  17   1        DS_ReadTime();
+  18   1        if(((READTIME[0] & 0x80) >> 7) == 1)
+  19   1        {
+  20   2          DS_Init(TIME);
+  21   2        }
+  22   1        lcd_initial();
+  23   1      //  LCD_Clear(WHITE);
+  24   1      //  Delay2000ms();
+  25   1      //  Draw_DHT11();
+  26   1      //  LCD_Clear(WHITE);
+  27   1      //  Draw_DHT11();
+  28   1      //  Draw_DS1302();
+  29   1        Timer5Init();
+  30   1        while(1)
+  31   1        {
+  32   2          Keyinit();
+  33   2        }
   34   1        
-  35   1        //---免掉点下载，波特率默认57600bps--------
-  36   1        static unsigned char uart_ser = 0;
-  37   1        if(TI==1)   
-  38   1        {
-  39   2          TI=0;
-  40   2        }
-  41   1        RI = 0;
-  42   1        if(SBUF == 0x7f)
-  43   1        {
-  44   2          uart_ser++;
-  45   2          if(uart_ser == 10)
-  46   2          {
-  47   3            uart_ser = 0;
-  48   3            IAP_CONTR |= 0x60;
-  49   3          }
-  50   2        }
-  51   1        else
-  52   1        {
-  53   2          uart_ser = 0;
-  54   2        }   
-C51 COMPILER V9.59.0.0   MAIN                                                              08/22/2020 16:11:54 PAGE 2   
+  35   1      }
+  36          void UART1_Isr() interrupt 4
+  37          {
+  38   1        //---免掉点下载，最低波特率默认57600bps--------
+  39   1        static unsigned char uart_ser = 0;
+  40   1        if(TI==1)   
+  41   1        {
+  42   2          TI=0;
+  43   2        }
+  44   1        RI = 0;
+  45   1        if(SBUF == 0x7f)
+  46   1        {
+  47   2          uart_ser++;
+  48   2          if(uart_ser == 10)
+  49   2          {
+  50   3            uart_ser = 0;
+  51   3            IAP_CONTR |= 0x60;
+  52   3          }
+  53   2        }
+  54   1        else
+C51 COMPILER V9.59.0.0   MAIN                                                              08/23/2020 10:36:32 PAGE 2   
 
-  55   1        //-----------------------------------------
-  56   1      }
+  55   1        {
+  56   2          uart_ser = 0;
+  57   2        }   
+  58   1        //-----------------------------------------
+  59   1      }
+  60          void TM2_Isr() interrupt 12 
+  61          {
+  62   1        AUXINTIF &= ~T2IF;
+  63   1        i++;
+  64   1        if(i == 40)
+  65   1        {
+  66   2          LCD_Clear(WHITE);
+  67   2          Draw_DS1302();
+  68   2          Draw_DHT11();
+  69   2          i = 0;
+  70   2        }
+  71   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    106    ----
+   CODE SIZE        =    191    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =      8    ----
+   XDATA SIZE       =      9    ----
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----

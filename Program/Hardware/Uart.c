@@ -14,15 +14,13 @@ void Uart1_Init()//57600bps@24.000MHz
 	TR1 = 1;		//启动定时器1
 	EA = 1;
 	ES = 1;
-
 }
-void Send_string(unsigned char *a)
+void Timer5Init()		//25毫秒@24.000MHz
 {
-	while(*a != '!')
-	{
-		SBUF = *a;
-		a++;
-		while(TI != 1);
-		TI = 0;
-	}
+	AUXR &= 0xFB;		//定时器时钟12T模式
+	T2L = 0xB0;		//设置定时初值
+	T2H = 0x3C;		//设置定时初值
+	AUXR |= 0x10;		//定时器2开始计时
+	IE2 = ET2; 
+	EA = 1;
 }

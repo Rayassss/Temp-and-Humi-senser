@@ -10,7 +10,7 @@ extern unsigned char READTIME[7];
 extern unsigned char RH_data_H,RH_data_L,T_data_H,T_data_L,checkdata;
 void Draw_DHT11()
 {
-		unsigned char RH[2] = {0},T[2]= {0};
+		unsigned char RH[2],T[2];
 		RH_data_H = 0,RH_data_L = 0,T_data_H = 0,T_data_L = 0,checkdata = 0;
 //		unsigned char str[5];
 			DHT11_init();
@@ -21,10 +21,12 @@ void Draw_DHT11()
 //	  str[3]=T_data_L;
 //	  str[4]=checkdata;
 //	  SendData(str) ;  
+		memset(RH,' ',sizeof(RH));
+		memset(T,' ',sizeof(T));
 		RH[0] = '0' + (RH_data_H/10);
 		RH[1] = '0' + (RH_data_H%10);
-		Display_ASCII8X16(10,50,"%RH=");
- 		Display_ASCII8X16(42,50,RH);
+		Display_ASCII8X16(10,90,"%RH=");
+ 		Display_ASCII8X16(42,90,RH);
 		T[0] = '0' + (T_data_H/10);
 		T[1] = '0' + (T_data_H%10);
 		Display_ASCII8X16(10,70,"Tmp=");

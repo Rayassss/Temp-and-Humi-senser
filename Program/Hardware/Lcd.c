@@ -5,7 +5,6 @@
 #include "string.h"
 #include "AsciiLib.h"
 #include "Delay.h"
-#include "Font.h"
 //sbit bl        =P4^4;//接模块BL引脚，背光可以采用IO控制或者PWM控制，也可以直接接到高电平常亮
 sbit scl       =P1^1;//接模块CLK引脚,接裸屏Pin9_SCL
 sbit sda       =P1^2;//接模块DIN/MOSI引脚，接裸屏Pin8_SDA

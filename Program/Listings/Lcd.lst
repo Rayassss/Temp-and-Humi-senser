@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   LCD                                                               08/22/2020 10:58:11 PAGE 1   
+C51 COMPILER V9.59.0.0   LCD                                                               08/22/2020 20:31:07 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE LCD
@@ -16,424 +16,423 @@ line level    source
    5          #include "string.h"
    6          #include "AsciiLib.h"
    7          #include "Delay.h"
-   8          #include "Font.h"
-   9          //sbit bl        =P4^4;//接模块BL引脚，背光可以采用IO控制或者PWM控制，也可以直接接到高电平常亮
-  10          sbit scl       =P1^1;//接模块CLK引脚,接裸屏Pin9_SCL
-  11          sbit sda       =P1^2;//接模块DIN/MOSI引脚，接裸屏Pin8_SDA
-  12          sbit rs        =P1^3;//接模块D/C引脚，接裸屏Pin7_A0
-  13          sbit cs        =P1^0;//接模块CE引脚，接裸屏Pin12_CS
-  14          sbit reset     =P1^4;//接模块RST引脚，接裸屏Pin6_RES
-  15          void delay(unsigned int time)
-  16          {
-  17   1       unsigned int i,j;
-  18   1        for(i=0;i<time;i++)
-  19   1         for(j=0;j<250;j++);
-  20   1      }
-  21          
-  22          //向SPI总线传输一个8位数据
-  23          void  SPI_WriteData(unsigned char Data)
-  24          {
-  25   1        unsigned char i=0;
-  26   1        for(i=8;i>0;i--)
-  27   1        {
-  28   2          if(Data&0x80) 
-  29   2          sda=1; //输出数据
-  30   2          else sda=0;
-  31   2          scl=0;
-  32   2          scl=1;
-  33   2          Data<<=1;
-  34   2        }
-  35   1      }
-  36          //向液晶屏写一个8位指令
-  37          void  Lcd_WriteIndex(unsigned char Data)
-  38          { 
-  39   1          cs=0;
-  40   1          rs=0;
-  41   1          SPI_WriteData(Data);    
-  42   1          cs=1;
-  43   1      }
-  44          //向液晶屏写一个8位数据
-  45          void  Lcd_WriteData(unsigned char Data)
-  46          { 
-  47   1          unsigned char i=0;
-  48   1          cs=0;
-  49   1          rs=1;
-  50   1          SPI_WriteData(Data);  
-  51   1          cs=1;
-  52   1      }
-  53          //向液晶屏写一个16位数据
-C51 COMPILER V9.59.0.0   LCD                                                               08/22/2020 10:58:11 PAGE 2   
+   8          //sbit bl        =P4^4;//接模块BL引脚，背光可以采用IO控制或者PWM控制，也可以直接接到高电平常亮
+   9          sbit scl       =P1^1;//接模块CLK引脚,接裸屏Pin9_SCL
+  10          sbit sda       =P1^2;//接模块DIN/MOSI引脚，接裸屏Pin8_SDA
+  11          sbit rs        =P1^3;//接模块D/C引脚，接裸屏Pin7_A0
+  12          sbit cs        =P1^0;//接模块CE引脚，接裸屏Pin12_CS
+  13          sbit reset     =P1^4;//接模块RST引脚，接裸屏Pin6_RES
+  14          void delay(unsigned int time)
+  15          {
+  16   1       unsigned int i,j;
+  17   1        for(i=0;i<time;i++)
+  18   1         for(j=0;j<250;j++);
+  19   1      }
+  20          
+  21          //向SPI总线传输一个8位数据
+  22          void  SPI_WriteData(unsigned char Data)
+  23          {
+  24   1        unsigned char i=0;
+  25   1        for(i=8;i>0;i--)
+  26   1        {
+  27   2          if(Data&0x80) 
+  28   2          sda=1; //输出数据
+  29   2          else sda=0;
+  30   2          scl=0;
+  31   2          scl=1;
+  32   2          Data<<=1;
+  33   2        }
+  34   1      }
+  35          //向液晶屏写一个8位指令
+  36          void  Lcd_WriteIndex(unsigned char Data)
+  37          { 
+  38   1          cs=0;
+  39   1          rs=0;
+  40   1          SPI_WriteData(Data);    
+  41   1          cs=1;
+  42   1      }
+  43          //向液晶屏写一个8位数据
+  44          void  Lcd_WriteData(unsigned char Data)
+  45          { 
+  46   1          unsigned char i=0;
+  47   1          cs=0;
+  48   1          rs=1;
+  49   1          SPI_WriteData(Data);  
+  50   1          cs=1;
+  51   1      }
+  52          //向液晶屏写一个16位数据
+  53          void  Lcd_WriteData_16(unsigned int Data)
+C51 COMPILER V9.59.0.0   LCD                                                               08/22/2020 20:31:07 PAGE 2   
 
-  54          void  Lcd_WriteData_16(unsigned int Data)
-  55          {
-  56   1        unsigned char i=0;
-  57   1        cs=0;
-  58   1        rs=1;
-  59   1        SPI_WriteData(Data>>8);   //写入高8位数据
-  60   1        SPI_WriteData(Data);      //写入低8位数据
-  61   1        cs=1;
-  62   1      
-  63   1      }
-  64          //LCD复位时序
-  65          void Reset(void)
-  66          {
-  67   1          reset=0;
-  68   1          delay(100);
-  69   1          reset=1;
-  70   1          delay(100);
-  71   1      }
-  72          //////////////////////////////////////////////////////////////////////////////////////////////
-  73          //液晶屏初始化 for S6D02A1
-  74          void lcd_initial()
-  75          {
-  76   1        bl = 0;
-  77   1        Delay1000ms() ;
-  78   1        bl = 1;
-  79   1        Reset();//Reset before LCD Init.
-  80   1          
-  81   1        //LCD Init For 1.44Inch LCD Panel with ST7735R.
-  82   1        Lcd_WriteIndex(0x11);//Sleep exit 
-  83   1        delay (120);
-  84   1          
-  85   1        //ST7735R Frame Rate
-  86   1        Lcd_WriteIndex(0xB1); 
-  87   1        Lcd_WriteData(0x01); 
-  88   1        Lcd_WriteData(0x2C); 
-  89   1        Lcd_WriteData(0x2D); 
-  90   1      
-  91   1        Lcd_WriteIndex(0xB2); 
-  92   1        Lcd_WriteData(0x01); 
-  93   1        Lcd_WriteData(0x2C); 
-  94   1        Lcd_WriteData(0x2D); 
-  95   1      
-  96   1        Lcd_WriteIndex(0xB3); 
-  97   1        Lcd_WriteData(0x01); 
-  98   1        Lcd_WriteData(0x2C); 
-  99   1        Lcd_WriteData(0x2D); 
- 100   1        Lcd_WriteData(0x01); 
- 101   1        Lcd_WriteData(0x2C); 
- 102   1        Lcd_WriteData(0x2D); 
- 103   1        
- 104   1        Lcd_WriteIndex(0xB4); //Column inversion 
- 105   1        Lcd_WriteData(0x07); 
- 106   1        
- 107   1        //ST7735R Power Sequence
- 108   1        Lcd_WriteIndex(0xC0); 
- 109   1        Lcd_WriteData(0xA2); 
- 110   1        Lcd_WriteData(0x02); 
- 111   1        Lcd_WriteData(0x84); 
- 112   1        Lcd_WriteIndex(0xC1); 
- 113   1        Lcd_WriteData(0xC5); 
- 114   1      
- 115   1        Lcd_WriteIndex(0xC2); 
-C51 COMPILER V9.59.0.0   LCD                                                               08/22/2020 10:58:11 PAGE 3   
+  54          {
+  55   1        unsigned char i=0;
+  56   1        cs=0;
+  57   1        rs=1;
+  58   1        SPI_WriteData(Data>>8);   //写入高8位数据
+  59   1        SPI_WriteData(Data);      //写入低8位数据
+  60   1        cs=1;
+  61   1      
+  62   1      }
+  63          //LCD复位时序
+  64          void Reset(void)
+  65          {
+  66   1          reset=0;
+  67   1          delay(100);
+  68   1          reset=1;
+  69   1          delay(100);
+  70   1      }
+  71          //////////////////////////////////////////////////////////////////////////////////////////////
+  72          //液晶屏初始化 for S6D02A1
+  73          void lcd_initial()
+  74          {
+  75   1        bl = 0;
+  76   1        Delay1000ms() ;
+  77   1        bl = 1;
+  78   1        Reset();//Reset before LCD Init.
+  79   1          
+  80   1        //LCD Init For 1.44Inch LCD Panel with ST7735R.
+  81   1        Lcd_WriteIndex(0x11);//Sleep exit 
+  82   1        delay (120);
+  83   1          
+  84   1        //ST7735R Frame Rate
+  85   1        Lcd_WriteIndex(0xB1); 
+  86   1        Lcd_WriteData(0x01); 
+  87   1        Lcd_WriteData(0x2C); 
+  88   1        Lcd_WriteData(0x2D); 
+  89   1      
+  90   1        Lcd_WriteIndex(0xB2); 
+  91   1        Lcd_WriteData(0x01); 
+  92   1        Lcd_WriteData(0x2C); 
+  93   1        Lcd_WriteData(0x2D); 
+  94   1      
+  95   1        Lcd_WriteIndex(0xB3); 
+  96   1        Lcd_WriteData(0x01); 
+  97   1        Lcd_WriteData(0x2C); 
+  98   1        Lcd_WriteData(0x2D); 
+  99   1        Lcd_WriteData(0x01); 
+ 100   1        Lcd_WriteData(0x2C); 
+ 101   1        Lcd_WriteData(0x2D); 
+ 102   1        
+ 103   1        Lcd_WriteIndex(0xB4); //Column inversion 
+ 104   1        Lcd_WriteData(0x07); 
+ 105   1        
+ 106   1        //ST7735R Power Sequence
+ 107   1        Lcd_WriteIndex(0xC0); 
+ 108   1        Lcd_WriteData(0xA2); 
+ 109   1        Lcd_WriteData(0x02); 
+ 110   1        Lcd_WriteData(0x84); 
+ 111   1        Lcd_WriteIndex(0xC1); 
+ 112   1        Lcd_WriteData(0xC5); 
+ 113   1      
+ 114   1        Lcd_WriteIndex(0xC2); 
+ 115   1        Lcd_WriteData(0x0A); 
+C51 COMPILER V9.59.0.0   LCD                                                               08/22/2020 20:31:07 PAGE 3   
 
- 116   1        Lcd_WriteData(0x0A); 
- 117   1        Lcd_WriteData(0x00); 
- 118   1      
- 119   1        Lcd_WriteIndex(0xC3); 
- 120   1        Lcd_WriteData(0x8A); 
- 121   1        Lcd_WriteData(0x2A); 
- 122   1        Lcd_WriteIndex(0xC4); 
- 123   1        Lcd_WriteData(0x8A); 
- 124   1        Lcd_WriteData(0xEE); 
- 125   1        
- 126   1        Lcd_WriteIndex(0xC5); //VCOM 
- 127   1        Lcd_WriteData(0x0E); 
- 128   1        
- 129   1        Lcd_WriteIndex(0x36); //MX, MY, RGB mode 
- 130   1        Lcd_WriteData(0xC0); 
- 131   1        
- 132   1        //ST7735R Gamma Sequence
- 133   1        Lcd_WriteIndex(0xe0); 
- 134   1        Lcd_WriteData(0x0f); 
- 135   1        Lcd_WriteData(0x1a); 
- 136   1        Lcd_WriteData(0x0f); 
- 137   1        Lcd_WriteData(0x18); 
- 138   1        Lcd_WriteData(0x2f); 
- 139   1        Lcd_WriteData(0x28); 
- 140   1        Lcd_WriteData(0x20); 
- 141   1        Lcd_WriteData(0x22); 
- 142   1        Lcd_WriteData(0x1f); 
- 143   1        Lcd_WriteData(0x1b); 
- 144   1        Lcd_WriteData(0x23); 
- 145   1        Lcd_WriteData(0x37); 
- 146   1        Lcd_WriteData(0x00);  
- 147   1        Lcd_WriteData(0x07); 
- 148   1        Lcd_WriteData(0x02); 
- 149   1        Lcd_WriteData(0x10); 
- 150   1      
- 151   1        Lcd_WriteIndex(0xe1); 
- 152   1        Lcd_WriteData(0x0f); 
- 153   1        Lcd_WriteData(0x1b); 
- 154   1        Lcd_WriteData(0x0f); 
- 155   1        Lcd_WriteData(0x17); 
- 156   1        Lcd_WriteData(0x33); 
- 157   1        Lcd_WriteData(0x2c); 
- 158   1        Lcd_WriteData(0x29); 
- 159   1        Lcd_WriteData(0x2e); 
+ 116   1        Lcd_WriteData(0x00); 
+ 117   1      
+ 118   1        Lcd_WriteIndex(0xC3); 
+ 119   1        Lcd_WriteData(0x8A); 
+ 120   1        Lcd_WriteData(0x2A); 
+ 121   1        Lcd_WriteIndex(0xC4); 
+ 122   1        Lcd_WriteData(0x8A); 
+ 123   1        Lcd_WriteData(0xEE); 
+ 124   1        
+ 125   1        Lcd_WriteIndex(0xC5); //VCOM 
+ 126   1        Lcd_WriteData(0x0E); 
+ 127   1        
+ 128   1        Lcd_WriteIndex(0x36); //MX, MY, RGB mode 
+ 129   1        Lcd_WriteData(0xC0); 
+ 130   1        
+ 131   1        //ST7735R Gamma Sequence
+ 132   1        Lcd_WriteIndex(0xe0); 
+ 133   1        Lcd_WriteData(0x0f); 
+ 134   1        Lcd_WriteData(0x1a); 
+ 135   1        Lcd_WriteData(0x0f); 
+ 136   1        Lcd_WriteData(0x18); 
+ 137   1        Lcd_WriteData(0x2f); 
+ 138   1        Lcd_WriteData(0x28); 
+ 139   1        Lcd_WriteData(0x20); 
+ 140   1        Lcd_WriteData(0x22); 
+ 141   1        Lcd_WriteData(0x1f); 
+ 142   1        Lcd_WriteData(0x1b); 
+ 143   1        Lcd_WriteData(0x23); 
+ 144   1        Lcd_WriteData(0x37); 
+ 145   1        Lcd_WriteData(0x00);  
+ 146   1        Lcd_WriteData(0x07); 
+ 147   1        Lcd_WriteData(0x02); 
+ 148   1        Lcd_WriteData(0x10); 
+ 149   1      
+ 150   1        Lcd_WriteIndex(0xe1); 
+ 151   1        Lcd_WriteData(0x0f); 
+ 152   1        Lcd_WriteData(0x1b); 
+ 153   1        Lcd_WriteData(0x0f); 
+ 154   1        Lcd_WriteData(0x17); 
+ 155   1        Lcd_WriteData(0x33); 
+ 156   1        Lcd_WriteData(0x2c); 
+ 157   1        Lcd_WriteData(0x29); 
+ 158   1        Lcd_WriteData(0x2e); 
+ 159   1        Lcd_WriteData(0x30); 
  160   1        Lcd_WriteData(0x30); 
- 161   1        Lcd_WriteData(0x30); 
- 162   1        Lcd_WriteData(0x39); 
- 163   1        Lcd_WriteData(0x3f); 
- 164   1        Lcd_WriteData(0x00); 
- 165   1        Lcd_WriteData(0x07); 
- 166   1        Lcd_WriteData(0x03); 
- 167   1        Lcd_WriteData(0x10);  
- 168   1        
- 169   1        Lcd_WriteIndex(0x2a);
- 170   1        Lcd_WriteData(0x00);
- 171   1        Lcd_WriteData(0x00+2);
- 172   1        Lcd_WriteData(0x00);
- 173   1        Lcd_WriteData(0x80+2);
- 174   1      
- 175   1        Lcd_WriteIndex(0x2b);
- 176   1        Lcd_WriteData(0x00);
- 177   1        Lcd_WriteData(0x00+3);
-C51 COMPILER V9.59.0.0   LCD                                                               08/22/2020 10:58:11 PAGE 4   
+ 161   1        Lcd_WriteData(0x39); 
+ 162   1        Lcd_WriteData(0x3f); 
+ 163   1        Lcd_WriteData(0x00); 
+ 164   1        Lcd_WriteData(0x07); 
+ 165   1        Lcd_WriteData(0x03); 
+ 166   1        Lcd_WriteData(0x10);  
+ 167   1        
+ 168   1        Lcd_WriteIndex(0x2a);
+ 169   1        Lcd_WriteData(0x00);
+ 170   1        Lcd_WriteData(0x00+2);
+ 171   1        Lcd_WriteData(0x00);
+ 172   1        Lcd_WriteData(0x80+2);
+ 173   1      
+ 174   1        Lcd_WriteIndex(0x2b);
+ 175   1        Lcd_WriteData(0x00);
+ 176   1        Lcd_WriteData(0x00+3);
+ 177   1        Lcd_WriteData(0x00);
+C51 COMPILER V9.59.0.0   LCD                                                               08/22/2020 20:31:07 PAGE 4   
 
- 178   1        Lcd_WriteData(0x00);
- 179   1        Lcd_WriteData(0x80+3);
- 180   1        
- 181   1        Lcd_WriteIndex(0xF0); //Enable test command  
- 182   1        Lcd_WriteData(0x01); 
- 183   1        Lcd_WriteIndex(0xF6); //Disable ram power save mode 
- 184   1        Lcd_WriteData(0x00); 
- 185   1        
- 186   1        Lcd_WriteIndex(0x3A); //65k mode 
- 187   1        Lcd_WriteData(0x05); 
+ 178   1        Lcd_WriteData(0x80+3);
+ 179   1        
+ 180   1        Lcd_WriteIndex(0xF0); //Enable test command  
+ 181   1        Lcd_WriteData(0x01); 
+ 182   1        Lcd_WriteIndex(0xF6); //Disable ram power save mode 
+ 183   1        Lcd_WriteData(0x00); 
+ 184   1        
+ 185   1        Lcd_WriteIndex(0x3A); //65k mode 
+ 186   1        Lcd_WriteData(0x05); 
+ 187   1        
  188   1        
- 189   1        
- 190   1        Lcd_WriteIndex(0x29);//Display on
- 191   1        dsp_single_colour(WHITE);
- 192   1      }
- 193          /*************************************************
- 194          函数名：LCD_Set_Region
- 195          功能：设置lcd显示区域，在此区域写点数据自动换行
- 196          入口参数：xy起点和终点
- 197          返回值：无
- 198          *************************************************/
- 199          
- 200          //全屏填充函数
- 201          void Lcd_SetRegion(unsigned int x_start,unsigned int y_start,unsigned int x_end,unsigned int y_end,unsigne
+ 189   1        Lcd_WriteIndex(0x29);//Display on
+ 190   1        dsp_single_colour(WHITE);
+ 191   1      }
+ 192          /*************************************************
+ 193          函数名：LCD_Set_Region
+ 194          功能：设置lcd显示区域，在此区域写点数据自动换行
+ 195          入口参数：xy起点和终点
+ 196          返回值：无
+ 197          *************************************************/
+ 198          
+ 199          //全屏填充函数
+ 200          void Lcd_SetRegion(unsigned int x_start,unsigned int y_start,unsigned int x_end,unsigned int y_end,unsigne
              -d char mode)//mode是横竖屏模式，1为横屏，2为竖屏
- 202          { 
- 203   1        if(mode == 2)
- 204   1        {
- 205   2        Lcd_WriteIndex(0x2a);
- 206   2        Lcd_WriteData(0x02);
- 207   2        Lcd_WriteData(x_start+2);
- 208   2        Lcd_WriteData(0x02);
- 209   2        Lcd_WriteData(x_end+2);
- 210   2      
- 211   2        Lcd_WriteIndex(0x2b);
- 212   2        Lcd_WriteData(0x01);
- 213   2        Lcd_WriteData(y_start+1);
- 214   2        Lcd_WriteData(0x01);
- 215   2        Lcd_WriteData(y_end+1);
- 216   2        }
- 217   1        else if(mode == 1)
- 218   1        {
- 219   2        Lcd_WriteIndex(0x2a);
- 220   2        Lcd_WriteData(0x02);
- 221   2        Lcd_WriteData(x_start+2);
- 222   2        Lcd_WriteData(0x02);
- 223   2        Lcd_WriteData(x_end+2);
- 224   2      
- 225   2        Lcd_WriteIndex(0x2b);
- 226   2        Lcd_WriteData(0x01);
- 227   2        Lcd_WriteData(y_start+1);
- 228   2        Lcd_WriteData(0x01);
- 229   2        Lcd_WriteData(y_end+1); 
- 230   2        }
- 231   1          //#endif
- 232   1        Lcd_WriteIndex(0x2c);
- 233   1      }
+ 201          { 
+ 202   1        if(mode == 2)
+ 203   1        {
+ 204   2        Lcd_WriteIndex(0x2a);
+ 205   2        Lcd_WriteData(0x02);
+ 206   2        Lcd_WriteData(x_start+2);
+ 207   2        Lcd_WriteData(0x02);
+ 208   2        Lcd_WriteData(x_end+2);
+ 209   2      
+ 210   2        Lcd_WriteIndex(0x2b);
+ 211   2        Lcd_WriteData(0x01);
+ 212   2        Lcd_WriteData(y_start+1);
+ 213   2        Lcd_WriteData(0x01);
+ 214   2        Lcd_WriteData(y_end+1);
+ 215   2        }
+ 216   1        else if(mode == 1)
+ 217   1        {
+ 218   2        Lcd_WriteIndex(0x2a);
+ 219   2        Lcd_WriteData(0x02);
+ 220   2        Lcd_WriteData(x_start+2);
+ 221   2        Lcd_WriteData(0x02);
+ 222   2        Lcd_WriteData(x_end+2);
+ 223   2      
+ 224   2        Lcd_WriteIndex(0x2b);
+ 225   2        Lcd_WriteData(0x01);
+ 226   2        Lcd_WriteData(y_start+1);
+ 227   2        Lcd_WriteData(0x01);
+ 228   2        Lcd_WriteData(y_end+1); 
+ 229   2        }
+ 230   1          //#endif
+ 231   1        Lcd_WriteIndex(0x2c);
+ 232   1      }
+ 233          
  234          
- 235          
- 236          void PutPixel(unsigned int x_start,unsigned int y_start,unsigned int color)
- 237          {
- 238   1        Lcd_SetRegion(x_start,y_start,x_start+1,y_start+1,2);
-C51 COMPILER V9.59.0.0   LCD                                                               08/22/2020 10:58:11 PAGE 5   
+ 235          void PutPixel(unsigned int x_start,unsigned int y_start,unsigned int color)
+ 236          {
+ 237   1        Lcd_SetRegion(x_start,y_start,x_start+1,y_start+1,2);
+ 238   1        Lcd_WriteData_16(color);
+C51 COMPILER V9.59.0.0   LCD                                                               08/22/2020 20:31:07 PAGE 5   
 
- 239   1        Lcd_WriteData_16(color);
- 240   1      }
- 241          void dsp_single_colour(int color)
- 242          {
- 243   1        unsigned char i,j;
- 244   1        Lcd_SetRegion(0,0,128-1,160-1,2);
- 245   1        for (i=0;i<160;i++)
- 246   1            for (j=0;j<128;j++)
- 247   1                Lcd_WriteData_16(color);
- 248   1      }
- 249          //显示一个英文字符
- 250          void Display_ASCII8X16(unsigned int x0,unsigned int y0,unsigned char *s)
- 251          {
- 252   1        int i,j,k,x,y,xx;
- 253   1        unsigned char qm;
- 254   1        long int ulOffset;
- 255   1        char  ywbuf[32],temp[2];
- 256   1        for(i = 0; i<strlen((unsigned char*)s);i++)
- 257   1        {
- 258   2          if(((unsigned char)(*(s+i))) >= 161)
- 259   2          {
- 260   3            temp[0] = *(s+i);
- 261   3            temp[1] = '\0';
- 262   3          } 
- 263   2          else
- 264   2          {
- 265   3            qm = *(s+i);
- 266   3            ulOffset = (long int)(qm) * 16;   
- 267   3            for (j = 0; j < 16; j ++)
- 268   3            {
- 269   4              ywbuf[j]=Zk_ASCII8X16[ulOffset+j];
- 270   4            }          
- 271   3            for(y = 0;y < 16;y++)
- 272   3            {
- 273   4                for(x=0;x<8;x++) 
- 274   4                {
- 275   5                   k=x % 8;             
- 276   5                  if(ywbuf[y]&(0x80 >> k))
- 277   5                  {
- 278   6                    xx=x0+x+i*8;
- 279   6                    PutPixel(xx,y+y0,BLACK);
- 280   6                  }           
- 281   5                }
- 282   4            }
- 283   3          }
- 284   2        }       
- 285   1      }
- 286          void Display_Num(unsigned char x,unsigned char y,unsigned char *str)
- 287          {
- 288   1        unsigned char Temp_Count = 0;
- 289   1        while(*str)
- 290   1        {
- 291   2          unsigned int i,Num;
- 292   2          unsigned char j,m;                  //定义临时变量
- 293   2          Num = *str;
- 294   2          if(Num == '.')
- 295   2            Num = 10;
- 296   2          else
- 297   2            Num = Num - 48;  //ASCII转数字
- 298   2          Lcd_SetRegion(x+Temp_Count*15,y,x + Temp_Count*15 + 15, y + 32 - 1,1);   // 设置为纵向显示
- 299   2            for(i=0;i<64;i++)
- 300   2            {                   //32个字节 每个字节都要一个点一个点处理 所以是处理了32X8次
-C51 COMPILER V9.59.0.0   LCD                                                               08/22/2020 10:58:11 PAGE 6   
+ 239   1      }
+ 240          void dsp_single_colour(int color)
+ 241          {
+ 242   1        unsigned char i,j;
+ 243   1        Lcd_SetRegion(0,0,128-1,160-1,2);
+ 244   1        for (i=0;i<160;i++)
+ 245   1            for (j=0;j<128;j++)
+ 246   1                Lcd_WriteData_16(color);
+ 247   1      }
+ 248          //显示一个英文字符
+ 249          void Display_ASCII8X16(unsigned int x0,unsigned int y0,unsigned char *s)
+ 250          {
+ 251   1        int i,j,k,x,y,xx;
+ 252   1        unsigned char qm;
+ 253   1        long int ulOffset;
+ 254   1        char  ywbuf[32],temp[2];
+ 255   1        for(i = 0; i<strlen((unsigned char*)s);i++)
+ 256   1        {
+ 257   2          if(((unsigned char)(*(s+i))) >= 161)
+ 258   2          {
+ 259   3            temp[0] = *(s+i);
+ 260   3            temp[1] = '\0';
+ 261   3          } 
+ 262   2          else
+ 263   2          {
+ 264   3            qm = *(s+i);
+ 265   3            ulOffset = (long int)(qm) * 16;   
+ 266   3            for (j = 0; j < 16; j ++)
+ 267   3            {
+ 268   4              ywbuf[j]=Zk_ASCII8X16[ulOffset+j];
+ 269   4            }          
+ 270   3            for(y = 0;y < 16;y++)
+ 271   3            {
+ 272   4                for(x=0;x<8;x++) 
+ 273   4                {
+ 274   5                   k=x % 8;             
+ 275   5                  if(ywbuf[y]&(0x80 >> k))
+ 276   5                  {
+ 277   6                    xx=x0+x+i*8;
+ 278   6                    PutPixel(xx,y+y0,BLACK);
+ 279   6                  }           
+ 280   5                }
+ 281   4            }
+ 282   3          }
+ 283   2        }       
+ 284   1      }
+ 285          void Display_Num(unsigned char x,unsigned char y,unsigned char *str)
+ 286          {
+ 287   1        unsigned char Temp_Count = 0;
+ 288   1        while(*str)
+ 289   1        {
+ 290   2          unsigned int i,Num;
+ 291   2          unsigned char j,m;                  //定义临时变量
+ 292   2          Num = *str;
+ 293   2          if(Num == '.')
+ 294   2            Num = 10;
+ 295   2          else
+ 296   2            Num = Num - 48;  //ASCII转数字
+ 297   2          Lcd_SetRegion(x+Temp_Count*15,y,x + Temp_Count*15 + 15, y + 32 - 1,1);   // 设置为纵向显示
+ 298   2            for(i=0;i<64;i++)
+ 299   2            {                   //32个字节 每个字节都要一个点一个点处理 所以是处理了32X8次
+ 300   3              m = Number_16_32_[Num * 64 + i];              //读取对应字节数据
+C51 COMPILER V9.59.0.0   LCD                                                               08/22/2020 20:31:07 PAGE 6   
 
- 301   3              m = Number_16_32_[Num * 64 + i];              //读取对应字节数据
- 302   3              for(j=0;j<8;j++)                  //显示一个字节  一个字节8位 也就是8个点
- 303   3              {
- 304   4                if((m&0x80)==0x80)              //判断是否是要写入点   如果是 给字体颜色
- 305   4                  Lcd_WriteData_16(BLACK);      
- 306   4                else                  //如果不是 为背景色  给颜色
- 307   4                  Lcd_WriteData_16(WHITE);
- 308   4                m<<=1;                        //左移一位  判断下一点
- 309   4              }
- 310   3            }
- 311   2          Temp_Count++;
- 312   2          str++;
- 313   2        }
- 314   1      }
- 315          void LCD_Clear(unsigned int Color)
- 316          {
- 317   1        unsigned char i,j;
- 318   1        Lcd_SetRegion(0,0,127,159,2);
- 319   1        for (i=0;i<160;i++)
- 320   1        {
- 321   2            for (j=0;j<128;j++)
- 322   2          {
- 323   3                Lcd_WriteData_16(Color);
- 324   3          }
- 325   2        }
- 326   1      }
- 327          void Lcd_half_clear()
- 328          {
- 329   1        unsigned char i,j;
- 330   1        Lcd_SetRegion(0,0,127,70,2);
- 331   1        for (i=0;i<70;i++)
- 332   1        {
- 333   2            for (j=0;j<128;j++)
- 334   2          {
- 335   3                Lcd_WriteData_16(WHITE);
- 336   3          }
- 337   2        }
- 338   1      }
- 339          void Lcd_arc_clear(unsigned char index)
- 340          {
- 341   1        unsigned char i,j;
- 342   1        switch(index)
- 343   1        {
- 344   2          case HOUR:
- 345   2            Lcd_SetRegion(0,0,20,20,2);
- 346   2            for (i=0;i<20;i++)
- 347   2            {
- 348   3              for (j=0;j<20;j++)
- 349   3              {
- 350   4                Lcd_WriteData_16(WHITE);
- 351   4              }
- 352   3            }
- 353   2            break;
- 354   2          case MIN:
- 355   2            Lcd_SetRegion(50,0,70,20,2);
- 356   2            for (i=0;i<20;i++)
- 357   2            {
- 358   3              for (j=0;j<20;j++)
- 359   3              {
- 360   4                Lcd_WriteData_16(WHITE);
- 361   4              }
- 362   3            }
-C51 COMPILER V9.59.0.0   LCD                                                               08/22/2020 10:58:11 PAGE 7   
+ 301   3              for(j=0;j<8;j++)                  //显示一个字节  一个字节8位 也就是8个点
+ 302   3              {
+ 303   4                if((m&0x80)==0x80)              //判断是否是要写入点   如果是 给字体颜色
+ 304   4                  Lcd_WriteData_16(BLACK);      
+ 305   4                else                  //如果不是 为背景色  给颜色
+ 306   4                  Lcd_WriteData_16(WHITE);
+ 307   4                m<<=1;                        //左移一位  判断下一点
+ 308   4              }
+ 309   3            }
+ 310   2          Temp_Count++;
+ 311   2          str++;
+ 312   2        }
+ 313   1      }
+ 314          void LCD_Clear(unsigned int Color)
+ 315          {
+ 316   1        unsigned char i,j;
+ 317   1        Lcd_SetRegion(0,0,127,159,2);
+ 318   1        for (i=0;i<160;i++)
+ 319   1        {
+ 320   2            for (j=0;j<128;j++)
+ 321   2          {
+ 322   3                Lcd_WriteData_16(Color);
+ 323   3          }
+ 324   2        }
+ 325   1      }
+ 326          void Lcd_half_clear()
+ 327          {
+ 328   1        unsigned char i,j;
+ 329   1        Lcd_SetRegion(0,0,127,70,2);
+ 330   1        for (i=0;i<70;i++)
+ 331   1        {
+ 332   2            for (j=0;j<128;j++)
+ 333   2          {
+ 334   3                Lcd_WriteData_16(WHITE);
+ 335   3          }
+ 336   2        }
+ 337   1      }
+ 338          void Lcd_arc_clear(unsigned char index)
+ 339          {
+ 340   1        unsigned char i,j;
+ 341   1        switch(index)
+ 342   1        {
+ 343   2          case HOUR:
+ 344   2            Lcd_SetRegion(0,0,20,20,2);
+ 345   2            for (i=0;i<20;i++)
+ 346   2            {
+ 347   3              for (j=0;j<20;j++)
+ 348   3              {
+ 349   4                Lcd_WriteData_16(WHITE);
+ 350   4              }
+ 351   3            }
+ 352   2            break;
+ 353   2          case MIN:
+ 354   2            Lcd_SetRegion(50,0,70,20,2);
+ 355   2            for (i=0;i<20;i++)
+ 356   2            {
+ 357   3              for (j=0;j<20;j++)
+ 358   3              {
+ 359   4                Lcd_WriteData_16(WHITE);
+ 360   4              }
+ 361   3            }
+ 362   2            break;
+C51 COMPILER V9.59.0.0   LCD                                                               08/22/2020 20:31:07 PAGE 7   
 
- 363   2            break;
- 364   2          case SEC:
- 365   2            Lcd_SetRegion(100,0,120,20,2);
- 366   2            for (i=0;i<20;i++)
- 367   2            {
- 368   3              for (j=0;j<20;j++)
- 369   3              {
- 370   4                Lcd_WriteData_16(WHITE);
- 371   4              }
- 372   3            }
- 373   2            break;  
- 374   2          case YEAR:
- 375   2            Lcd_SetRegion(0,40,37,60,2);
- 376   2            for (i=0;i<37;i++)
- 377   2            {
- 378   3              for (j=0;j<20;j++)
- 379   3              {
- 380   4                Lcd_WriteData_16(WHITE);
- 381   4              }
- 382   3            }
- 383   2            break;  
- 384   2          case MONTH:
- 385   2            Lcd_SetRegion(50,40,70,60,2);
- 386   2            for (i=0;i<20;i++)
- 387   2            {
- 388   3              for (j=0;j<20;j++)
- 389   3              {
- 390   4                Lcd_WriteData_16(WHITE);
- 391   4              }
- 392   3            }
- 393   2            break;      
- 394   2          case DATE:
- 395   2            Lcd_SetRegion(90,40,110,60,2);
- 396   2            for (i=0;i<20;i++)
- 397   2            {
- 398   3              for (j=0;j<20;j++)
- 399   3              {
- 400   4                Lcd_WriteData_16(WHITE);
- 401   4              }
- 402   3            }
- 403   2            break;
- 404   2        }
- 405   1      }
+ 363   2          case SEC:
+ 364   2            Lcd_SetRegion(100,0,120,20,2);
+ 365   2            for (i=0;i<20;i++)
+ 366   2            {
+ 367   3              for (j=0;j<20;j++)
+ 368   3              {
+ 369   4                Lcd_WriteData_16(WHITE);
+ 370   4              }
+ 371   3            }
+ 372   2            break;  
+ 373   2          case YEAR:
+ 374   2            Lcd_SetRegion(0,40,37,60,2);
+ 375   2            for (i=0;i<37;i++)
+ 376   2            {
+ 377   3              for (j=0;j<20;j++)
+ 378   3              {
+ 379   4                Lcd_WriteData_16(WHITE);
+ 380   4              }
+ 381   3            }
+ 382   2            break;  
+ 383   2          case MONTH:
+ 384   2            Lcd_SetRegion(50,40,70,60,2);
+ 385   2            for (i=0;i<20;i++)
+ 386   2            {
+ 387   3              for (j=0;j<20;j++)
+ 388   3              {
+ 389   4                Lcd_WriteData_16(WHITE);
+ 390   4              }
+ 391   3            }
+ 392   2            break;      
+ 393   2          case DATE:
+ 394   2            Lcd_SetRegion(90,40,110,60,2);
+ 395   2            for (i=0;i<20;i++)
+ 396   2            {
+ 397   3              for (j=0;j<20;j++)
+ 398   3              {
+ 399   4                Lcd_WriteData_16(WHITE);
+ 400   4              }
+ 401   3            }
+ 402   2            break;
+ 403   2        }
+ 404   1      }
+ 405          
  406          
- 407          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
    CODE SIZE        =   2122    ----
-   CONSTANT SIZE    =   6081    ----
+   CONSTANT SIZE    =   4801    ----
    XDATA SIZE       =   ----      86
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
